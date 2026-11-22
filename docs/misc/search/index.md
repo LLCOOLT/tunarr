@@ -118,6 +118,7 @@ Fields available for search:
 | `show_genre` | `string` | Genre of the show a program belongs to (only applicable to episodes) | comedy |
 | `show_tags` | `string` | Tag on the show the program belongs to (only applicable to episodes) | - |
 | `show_studio` | `string` | Studio on the show the program belongs to | - |
+| `show_rating` | `string` | Content rating of the show the program belongs to (only applicable to episodes, whose own `rating` is often empty) | `TV-Y7` |
 | `season` | `number` | Season number. For episodes: their season's number; for season groupings: their own number. `0` for Specials. | `1` |
 | `media_source_name` | `string` | Name of the media source (Plex server, Jellyfin server, etc.) the program was imported from | `My Plex` |
 | `library_name` | `string` | Name of the library within the media source the program belongs to | `TV Shows` |
