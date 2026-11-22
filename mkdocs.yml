@@ -97,6 +97,7 @@ nav:
           - Block Shuffle: configure/scheduling/block-shuffle.md
           #- Balance: configure/scheduling/balance.md
           - Mid-Roll Breaks: configure/scheduling/mid-roll-breaks.md
+          - Premieres and Rerun Weighting: configure/scheduling/premieres-and-rerun-weighting.md
           - Replicate: configure/scheduling/replicate.md
           - Consolidate: configure/scheduling/consolidate.md
       - Clients:
