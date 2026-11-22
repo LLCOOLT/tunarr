@@ -4,6 +4,7 @@ import {
   ChannelSlotScheduleRequest,
   ProgramsSlotScheduleRequest,
 } from '../services/scheduling/RandomSlotSchedulerService.ts';
+import { PlacedPremiereSchema } from '../services/scheduling/premieres.ts';
 import { SlotIteratorStateSchema } from '../services/scheduling/slotIteratorState.ts';
 import {
   ChannelTimeSlotScheduleRequest,
@@ -84,6 +85,7 @@ export const WorkerTimeSlotScheduleReply = z.object({
   result: z.object({
     ...TimeSlotScheduleResult.shape,
     iteratorState: SlotIteratorStateSchema,
+    premieres: PlacedPremiereSchema.array().optional(),
   }),
 });
 
@@ -96,6 +98,7 @@ const WorkerSlotScheduleReply = z.object({
   result: z.object({
     ...SlotScheduleResult.shape,
     iteratorState: SlotIteratorStateSchema,
+    premieres: PlacedPremiereSchema.array().optional(),
   }),
 });
 

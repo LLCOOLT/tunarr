@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { PremiereConfigSchema, RerunWeightingSchema } from './CycleFeatures.js';
 import { ChannelSchema } from '../schemas/channelSchema.js';
 import { SmartCollection } from '../schemas/collectionsSchema.js';
 import { CustomShowSchema } from '../schemas/customShowsSchema.js';
@@ -162,6 +163,8 @@ export const TimeSlotScheduleSchema = z.object({
   slots: z.array(TimeSlotSchema),
   timeZoneOffset: z.number(), // tz offset in...minutes, i think?
   startTomorrow: z.boolean().optional(),
+  premieres: PremiereConfigSchema.optional(),
+  rerunWeighting: RerunWeightingSchema.optional(),
 });
 
 export type TimeSlotSchedule = z.infer<typeof TimeSlotScheduleSchema>;

@@ -1316,6 +1316,9 @@ export class TVGuideService {
       isPaused: guideItem.isPaused ?? false,
       // For paused items specifically
       timeRemaining: guideItem.timeRemaining,
+      ...(isContentItem(guideItem.lineupItem) && guideItem.lineupItem.premiere
+        ? { isPremiere: true }
+        : {}),
     } as const;
 
     if (isNull(materializedItem)) {
@@ -1429,6 +1432,7 @@ export class TVGuideService {
           programming = {
             type: 'program',
             program: backingProgram,
+            ...(content.premiere ? { isPremiere: true } : {}),
           };
         }
 

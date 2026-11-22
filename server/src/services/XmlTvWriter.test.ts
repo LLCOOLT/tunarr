@@ -384,7 +384,10 @@ describe('XmlTvWriter', () => {
   });
 
   describe('serialized program order', () => {
-    function serializeProgram(program: ProgramWithRelationsOrm) {
+    function serializeProgram(
+      program: ProgramWithRelationsOrm,
+      opts: { isPremiere?: boolean } = {},
+    ) {
       const writer = new XmlTvWriter(inMemorySettingsDB(), globalOptions());
       const xml = writeXmltv(
         writer.generateXmltv([
@@ -392,7 +395,11 @@ describe('XmlTvWriter', () => {
             channel: createChannelOrm({ number: 1, name: 'Test Channel' }),
             programs: [
               {
-                programming: { type: 'program', program },
+                programming: {
+                  type: 'program',
+                  program,
+                  ...(opts.isPremiere ? { isPremiere: true } : {}),
+                },
                 title: program.title,
                 start: Date.parse('2026-09-22T00:00:00Z'),
                 stop: Date.parse('2026-09-22T00:30:00Z'),
@@ -535,6 +542,31 @@ describe('XmlTvWriter', () => {
         ]);
       },
     );
+
+    test('marks a premiere with <premiere/> instead of <previously-shown/>', () => {
+      const program = makeProgram({
+        title: 'New Episode',
+        type: 'movie',
+        sourceType: 'local',
+        duration: 0,
+        artwork: [],
+      });
+
+      const premiere = serializeProgram(program, { isPremiere: true });
+      expect(premiere.children.map((node) => node.tagName)).toEqual([
+        'title',
+        'premiere',
+      ]);
+      expect(premiere.xml).not.toContain('previously-shown');
+      // <new/> means a show's first episode ever, not a new episode.
+      expect(premiere.xml).not.toContain('<new');
+
+      const rerun = serializeProgram(program);
+      expect(rerun.children.map((node) => node.tagName)).toEqual([
+        'title',
+        'previously-shown',
+      ]);
+    });
 
     test('marks flex programmes as previously shown', () => {
       const writer = new XmlTvWriter(inMemorySettingsDB(), globalOptions());

@@ -44,6 +44,7 @@ import { MaterializedTimeSlot, TimeSlotScheduleSchema } from './TimeSlots.js';
 
 export * from './AutoChannel.js';
 export * from './CommonSlots.js';
+export * from './CycleFeatures.js';
 export * from './RandomSlots.js';
 export * from './Scheduling.js';
 export * from './TimeSlots.js';

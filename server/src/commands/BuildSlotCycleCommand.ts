@@ -4,6 +4,8 @@ import { inject, injectable } from 'inversify';
 import { sumBy } from 'lodash-es';
 import { condensedProgramToLineupItem } from '../db/channel/lineupItemConversion.ts';
 import type { LineupConfig, LineupItem } from '../db/derived_types/Lineup.ts';
+import { isContentItem } from '../db/derived_types/Lineup.ts';
+import type { PlacedPremiere } from '../services/scheduling/premieres.ts';
 import type { IWorkerPool } from '../interfaces/IWorkerPool.ts';
 import type {
   BuiltCycle,
@@ -76,7 +78,11 @@ export class BuildSlotCycleCommand {
             request: { ...request, schedule },
           });
 
-    const items = seq.collect(result.lineup, channelProgramToLineupItem);
+    const items = markPremieres(
+      seq.collect(result.lineup, channelProgramToLineupItem),
+      startTime,
+      result.premieres ?? [],
+    );
 
     return {
       items,
@@ -87,6 +93,40 @@ export class BuildSlotCycleCommand {
       },
     };
   }
+}
+
+/**
+ * Flags each premiere the scheduler placed on its lineup item: the first item
+ * of that program starting at or after the time the premiere was offered at.
+ * Head filler can push the program itself a little later.
+ */
+export function markPremieres(
+  items: LineupItem[],
+  cycleStartMs: number,
+  premieres: readonly PlacedPremiere[],
+): LineupItem[] {
+  if (premieres.length === 0) {
+    return items;
+  }
+
+  const pending = [...premieres];
+  let start = cycleStartMs;
+  return items.map((item) => {
+    const itemStart = start;
+    start += item.durationMs;
+    if (!isContentItem(item)) {
+      return item;
+    }
+    const index = pending.findIndex(
+      (premiere) =>
+        premiere.programId === item.id && premiere.atMs <= itemStart,
+    );
+    if (index < 0) {
+      return item;
+    }
+    pending.splice(index, 1);
+    return { ...item, premiere: true };
+  });
 }
 
 function channelProgramToLineupItem(

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { PremiereConfigSchema, RerunWeightingSchema } from './CycleFeatures.js';
 import { ChannelSchema } from '../schemas/channelSchema.js';
 import { CustomShowSchema } from '../schemas/customShowsSchema.js';
 import { FillerListSchema } from '../schemas/fillerSchema.js';
@@ -186,6 +187,8 @@ export const RandomSlotScheduleSchema = z.object({
   // Purely for UI purposes. Adjusting weight of one program affects the
   // weights of all others if lock weights === true.
   lockWeights: z.boolean().default(false),
+  premieres: PremiereConfigSchema.optional(),
+  rerunWeighting: RerunWeightingSchema.optional(),
 });
 
 // Request-only validation. RandomSlotScheduleSchema also parses lineups already

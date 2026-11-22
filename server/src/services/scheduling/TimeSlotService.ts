@@ -52,6 +52,8 @@ import type {
   SlotCycleOptions,
   SlotIteratorState,
 } from './slotIteratorState.ts';
+import { cycleFeatureOptions } from './cycleFeatures.ts';
+import type { PlacedPremiere } from './premieres.ts';
 import { TimeSlotImpl } from './TimeSlotImpl.js';
 
 dayjs.extend(duration);
@@ -96,6 +98,8 @@ function pushOrExtendFlex(
 
 export type TimeSlotCycleResult = TimeSlotScheduleResult & {
   iteratorState: SlotIteratorState;
+  // Premieres this build placed. Only set when premieres are on.
+  premieres?: PlacedPremiere[];
 };
 
 // eslint-disable-next-line @typescript-eslint/require-await
@@ -134,6 +138,12 @@ export async function scheduleTimeSlots(
     programMap,
     random,
   );
+  const features = cycleFeatureOptions(
+    schedule,
+    cycle,
+    +startTime,
+    allPrograms,
+  );
   const {
     iterators: slotIterators,
     resetPeriodCallbacks,
@@ -143,6 +153,7 @@ export async function scheduleTimeSlots(
     programMap,
     random,
     cycle.iteratorState,
+    features,
   );
 
   const periodDuration = dayjs.duration(1, schedule.period);
@@ -497,6 +508,11 @@ export async function scheduleTimeSlots(
     startTime: +t0,
     seed,
     discardCount: mt.getUseCount(),
-    iteratorState: snapshotIterators(),
+    iteratorState: features.premieres
+      ? { ...snapshotIterators(), premieres: features.premieres.snapshot() }
+      : snapshotIterators(),
+    ...(features.premieres
+      ? { premieres: [...features.premieres.placed] }
+      : {}),
   };
 }

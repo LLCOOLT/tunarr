@@ -205,6 +205,22 @@ describe('mapLineupItemToPlaybackItem', () => {
     expect(result.type).toBe('flex');
   });
 
+  test('a premiere airing is flagged, a rerun is not', () => {
+    const premiere = mapLineupItemToPlaybackItem(
+      makeProgramItem({}, { isPremiere: true }),
+      baseUrl,
+      channelId,
+    );
+    expect(premiere.type === 'content' && premiere.isPremiere).toBe(true);
+
+    const rerun = mapLineupItemToPlaybackItem(
+      makeProgramItem(),
+      baseUrl,
+      channelId,
+    );
+    expect(rerun.type === 'content' && 'isPremiere' in rerun).toBe(false);
+  });
+
   test('content item carries the program duration', () => {
     const item = makeProgramItem({ duration: 42 * 60 * 1000 });
 

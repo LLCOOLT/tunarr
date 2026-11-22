@@ -110,6 +110,8 @@ export type FallbackStreamLineupItem = BaseContentBackedStreamLineupItem & {
 export type ProgramStreamLineupItem = BaseContentBackedStreamLineupItem & {
   type: 'program';
   customShowId?: string;
+  // A new episode's premiere airing, from the lineup item.
+  isPremiere?: boolean;
 };
 
 export type RedirectStreamLineupItem = BaseStreamLineupItem & {

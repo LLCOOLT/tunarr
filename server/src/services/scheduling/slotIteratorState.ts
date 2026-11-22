@@ -18,8 +18,28 @@ export const ProgramIteratorSnapshotSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('shuffle'),
     playedIds: z.string().array(),
+    // Weighted shuffles only (rerun weighting): the rest of the current pass,
+    // in its planned order, so a rebuild follows the same order even after
+    // the weights' inputs changed.
+    order: z.string().array().optional(),
   }),
 ]);
+
+// Premieres only. `sinceMs` is the baseline: programs Tunarr first saw before
+// it are never premieres. `premieredIds` are the programs already premiered,
+// and `perDay` counts premieres per iterator key on one local day.
+export const PremiereStateSchema = z.object({
+  sinceMs: z.number(),
+  premieredIds: z.string().array(),
+  perDay: z
+    .record(
+      z.string(),
+      z.object({ day: z.string(), count: z.number().int().nonnegative() }),
+    )
+    .optional(),
+});
+
+export type PremiereState = z.infer<typeof PremiereStateSchema>;
 
 export type ProgramIteratorSnapshot = z.infer<
   typeof ProgramIteratorSnapshotSchema
@@ -41,6 +61,9 @@ export const SlotIteratorStateSchema = z.object({
   // each slot last played, keyed by its index in the sorted slot list.
   nextSlotIndex: z.number().int().nonnegative().optional(),
   slotLastPlayedMs: z.record(z.string(), z.number()).optional(),
+
+  // Cycle builds with premieres on only.
+  premieres: PremiereStateSchema.optional(),
 });
 
 export type SlotIteratorState = z.infer<typeof SlotIteratorStateSchema>;
@@ -55,4 +78,7 @@ export type SlotCycleOptions = {
   // Also stops `startTomorrow` from moving the start, because the caller
   // picks each cycle's start.
   endTime?: Dayjs;
+  // Programs the media source reports as watched, for rerun weighting's
+  // `unwatched` mode.
+  watchedProgramIds?: ReadonlySet<string>;
 };

@@ -21,6 +21,9 @@ const ContentLineupItemSchema = z
     fillerListId: z.uuid().optional(),
     fillerType: FillerType.optional(),
     startOffsetMs: z.number().nonnegative().optional(),
+    // This airing is the program's premiere on the channel, placed by the
+    // slot schedule's premieres setting.
+    premiere: z.boolean().optional(),
   })
   .merge(BaseLineupItemSchema);
 

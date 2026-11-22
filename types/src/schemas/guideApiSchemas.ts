@@ -14,6 +14,8 @@ const BaseGuideProgramSchema = z.object({
   stop: z.number(),
   isPaused: z.boolean().optional().default(false),
   timeRemaining: z.number().optional(),
+  // A new episode's premiere airing (the schedule's premieres setting).
+  isPremiere: z.boolean().optional(),
 });
 
 export const ContentGuideProgramSchema = ContentProgramSchema.required({

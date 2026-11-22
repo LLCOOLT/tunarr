@@ -31,6 +31,8 @@ import type {
   SlotCycleOptions,
   SlotIteratorState,
 } from './slotIteratorState.ts';
+import { cycleFeatureOptions } from './cycleFeatures.ts';
+import type { PlacedPremiere, PremiereTracker } from './premieres.ts';
 import type {
   PaddedProgram,
   SlotIteratorResult,
@@ -61,6 +63,8 @@ dayjs.extend(dayjsMod);
 
 export type RandomSlotCycleResult = SlotScheduleResult & {
   iteratorState: SlotIteratorState;
+  // Premieres this build placed. Only set when premieres are on.
+  premieres?: PlacedPremiere[];
 };
 
 class ScheduleContext {
@@ -75,6 +79,7 @@ class ScheduleContext {
   #engine: MersenneTwister19937;
   #unschedulablePrograms: SlotSchedulerProgram[];
   #snapshotIterators: SlotIteratorResult['snapshotIterators'];
+  #premieres: PremiereTracker | undefined;
 
   constructor(
     schedule: RandomSlotSchedule,
@@ -82,8 +87,9 @@ class ScheduleContext {
     startTime: dayjs.Dayjs,
     seed: number[] = createEntropy(),
     discardCount: number = 0,
-    iteratorState?: SlotIteratorState,
+    cycle: SlotCycleOptions = {},
   ) {
+    const iteratorState = cycle.iteratorState;
     this.#seed = seed;
     this.#engine = MersenneTwister19937.seedWithArray(this.#seed).discard(
       discardCount,
@@ -100,11 +106,19 @@ class ScheduleContext {
       programMap,
       this.#random,
     );
+    const features = cycleFeatureOptions(
+      schedule,
+      cycle,
+      +startTime,
+      schedulable,
+    );
+    this.#premieres = features.premieres;
     const { iterators: slotIterators, snapshotIterators } = createSlotIterators(
       schedule.slots,
       programMap,
       this.#random,
       iteratorState,
+      features,
     );
     this.#snapshotIterators = snapshotIterators;
     this.#startTime = this.#timeCursor = startTime;
@@ -227,7 +241,9 @@ class ScheduleContext {
         ...this.#snapshotIterators(),
         nextSlotIndex: this.#currentSlotIndex,
         slotLastPlayedMs: Object.fromEntries(this.#slotLastPlayed),
+        ...(this.#premieres ? { premieres: this.#premieres.snapshot() } : {}),
       },
+      ...(this.#premieres ? { premieres: [...this.#premieres.placed] } : {}),
     };
   }
 }
@@ -260,7 +276,7 @@ export class RandomSlotScheduler {
       startTime,
       seed,
       discardCount,
-      cycle.iteratorState,
+      cycle,
     );
 
     const { maxDays, padMs, padStyle, flexPreference, randomDistribution } =

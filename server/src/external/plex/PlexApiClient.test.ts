@@ -579,3 +579,44 @@ describe('PlexApiClient', () => {
     });
   });
 });
+
+describe('PlexApiClient getWatchStates', () => {
+  it('reads every key in one GET and returns the watch state', async () => {
+    const { client } = makeMinimalPlexClient();
+    const requests: { method?: string; url?: string }[] = [];
+    vi.spyOn(client, 'doRequest' as never).mockImplementation(((req: {
+      method?: string;
+      url?: string;
+    }) => {
+      requests.push(req);
+      return Promise.resolve({
+        MediaContainer: {
+          Metadata: [
+            { ratingKey: '1', viewCount: 2, lastViewedAt: 1_700_000_000 },
+            { ratingKey: '2' },
+          ],
+        },
+      });
+    }) as never);
+
+    const result = await client.getWatchStates(['1', '2']);
+
+    expect(requests).toEqual([
+      expect.objectContaining({ method: 'get', url: '/library/metadata/1,2' }),
+    ]);
+    expect(result.isSuccess() && result.get()).toEqual([
+      { ratingKey: '1', viewCount: 2, lastViewedAt: 1_700_000_000 },
+      { ratingKey: '2' },
+    ]);
+  });
+
+  it('makes no request for no keys', async () => {
+    const { client } = makeMinimalPlexClient();
+    const doRequest = vi.spyOn(client, 'doRequest' as never);
+
+    const result = await client.getWatchStates([]);
+
+    expect(doRequest).not.toHaveBeenCalled();
+    expect(result.isSuccess() && result.get()).toEqual([]);
+  });
+});

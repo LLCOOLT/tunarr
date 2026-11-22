@@ -384,6 +384,7 @@ export class StreamProgramCalculator {
               infiniteLoop: false,
               startOffset: lineupItem.startOffsetMs ?? 0,
               customShowId: lineupItem.customShowId,
+              ...(lineupItem.premiere ? { isPremiere: true } : {}),
             } satisfies ProgramStreamLineupItem;
           }
         } else if (backingItem) {

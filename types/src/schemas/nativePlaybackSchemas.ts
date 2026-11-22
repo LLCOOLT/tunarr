@@ -35,6 +35,9 @@ export const NativePlaybackContentItemSchema =
     // when the schedule cuts the program.
     durationMs: z.number().int().optional(),
     source: NativePlaybackSourceSchema.optional(),
+    // This airing is the program's premiere on the channel: a new episode
+    // placed by the schedule's premieres setting.
+    isPremiere: z.boolean().optional(),
   });
 
 export const NativePlaybackFlexItemSchema = NativePlaybackTimingSchema.extend({

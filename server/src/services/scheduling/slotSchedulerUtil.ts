@@ -89,8 +89,12 @@ import type {
   ProgramIteratorSnapshot,
   SlotIteratorState,
 } from './slotIteratorState.ts';
+import type { PremiereTracker } from './premieres.ts';
+import { PremiereProgramIterator } from './premieres.ts';
+import type { PassWeighting } from './rerunWeighting.ts';
 import { StaticProgramIterator } from './StaticProgramIterator.ts';
 import { WeightedFillerProgramIterator } from './WeightedFillerProgramIterator.ts';
+import { WeightedShuffleProgramIterator } from './WeightedShuffleProgramIterator.ts';
 
 const logger = LoggerFactory.child({
   className: 'SlotScheduler',
@@ -375,6 +379,7 @@ export function createSlotProgramIterator(
   programBySlotType: ProgramMapping,
   random: Random,
   resume?: ProgramIteratorSnapshot,
+  weighting?: PassWeighting,
 ): ProgramIterator {
   return match(slot)
     .with(
@@ -404,16 +409,32 @@ export function createSlotProgramIterator(
         resume,
       );
     })
-    .with(
-      { type: 'custom-show', order: 'shuffle' },
-      (slot) =>
-        new CustomProgramShuffleIterator(
-          slot.customShowId,
-          programBySlotType.custom[customShowSlotId(slot.customShowId)] ?? [],
+    .with({ type: 'custom-show', order: 'shuffle' }, (slot) => {
+      const programs =
+        programBySlotType.custom[customShowSlotId(slot.customShowId)] ?? [];
+      if (weighting) {
+        const indexById = createIndexByIdMap(programs, slot.customShowId);
+        return new WeightedShuffleProgramIterator<CondensedCustomProgram>(
+          programs,
           random,
+          weighting,
+          (program) => ({
+            customShowId: slot.customShowId,
+            duration: program.duration,
+            id: program.uuid,
+            index: indexById[program.uuid] ?? 0,
+            type: 'custom',
+          }),
           resume,
-        ),
-    )
+        );
+      }
+      return new CustomProgramShuffleIterator(
+        slot.customShowId,
+        programs,
+        random,
+        resume,
+      );
+    })
     .with({ type: 'custom-show', order: 'ordered_shuffle' }, (slot) => {
       const programs =
         programBySlotType.custom[`custom-show.${slot.customShowId}` as const] ??
@@ -460,7 +481,13 @@ export function createSlotProgramIterator(
       return createFillerShuffleIterator(programs, slot.fillerListId, random);
     })
     .with({ type: 'show' }, (slot) =>
-      getShowProgramIterator(programBySlotType, slot, random, resume),
+      getShowProgramIterator(
+        programBySlotType,
+        slot,
+        random,
+        resume,
+        weighting,
+      ),
     )
     .with({ type: 'smart-collection' }, (slot) => {
       const programs =
@@ -478,7 +505,9 @@ export function createSlotProgramIterator(
             resume,
           );
         case 'shuffle':
-          return new ContentProgramShuffleIterator(programs, random, resume);
+          return weighting
+            ? weightedContentShuffle(programs, random, weighting, resume)
+            : new ContentProgramShuffleIterator(programs, random, resume);
         case 'ordered_shuffle':
           return new ContentProgramChunkedShuffle(
             programs,
@@ -490,6 +519,50 @@ export function createSlotProgramIterator(
       }
     })
     .exhaustive();
+}
+
+function weightedContentShuffle(
+  programs: SlotSchedulerProgram[],
+  random: Random,
+  weighting: PassWeighting,
+  resume?: ProgramIteratorSnapshot,
+) {
+  return new WeightedShuffleProgramIterator<CondensedContentProgram>(
+    programs,
+    random,
+    weighting,
+    (program) => ({
+      type: 'content',
+      duration: program.duration,
+      id: program.uuid,
+    }),
+    resume,
+  );
+}
+
+/**
+ * The programs a show or smart-collection slot draws from, as its iterator
+ * sees them. Other slot types have no content pool premieres can come from.
+ */
+export function slotContentPool(
+  slot: BaseSlot,
+  programBySlotType: ProgramMapping,
+): SlotSchedulerProgram[] | undefined {
+  switch (slot.type) {
+    case 'show':
+      return showSlotPrograms(programBySlotType, slot);
+    case 'smart-collection':
+      return (
+        programBySlotType.smartCollection[
+          smartCollectionId(slot.smartCollectionId)
+        ] ?? []
+      );
+    case 'custom-show':
+    case 'filler':
+    case 'flex':
+    case 'redirect':
+      return;
+  }
 }
 
 export type SlotIteratorResult = {
@@ -526,11 +599,19 @@ export function deduplicateSlotIds<T extends BaseSlot>(slots: T[]): T[] {
   return slots;
 }
 
+export type SlotIteratorOptions = {
+  // Rerun weighting for shuffle slots. Undefined keeps the plain shuffle.
+  weighting?: PassWeighting;
+  // Premieres for show and smart-collection slots, on cycle builds only.
+  premieres?: PremiereTracker;
+};
+
 export function createSlotIterators(
   slots: BaseSlot[],
   programBySlotType: ProgramMapping,
   random: Random,
   resumeFrom: SlotIteratorResumeState = { iterators: {} },
+  options: SlotIteratorOptions = {},
 ): SlotIteratorResult {
   const result = new Map<string, ProgramIterator>();
   const resetPeriodCallbacks: (() => void)[] = [];
@@ -541,12 +622,24 @@ export function createSlotIterators(
   const keyedIterators = new Map<string, ProgramIterator>();
   const rerunIterators = new Map<string, RerunProgramIterator>();
   const createKeyedIterator = (key: string, slot: BaseSlot) => {
-    const iterator = createSlotProgramIterator(
+    let iterator = createSlotProgramIterator(
       slot,
       programBySlotType,
       random,
       resumeFrom.iterators[key],
+      options.weighting,
     );
+    const pool = options.premieres
+      ? slotContentPool(slot, programBySlotType)
+      : undefined;
+    if (options.premieres && pool) {
+      iterator = new PremiereProgramIterator(
+        iterator,
+        key,
+        pool,
+        options.premieres,
+      );
+    }
     keyedIterators.set(key, iterator);
     return iterator;
   };
@@ -734,11 +827,9 @@ export function getFillerIteratorsForSlot(
   return out;
 }
 
-function getShowProgramIterator(
+function showSlotPrograms(
   programBySlotType: ProgramMapping,
   slot: BaseShowProgrammingSlot,
-  random: Random,
-  resume?: ProgramIteratorSnapshot,
 ) {
   let programs = uniqBy(
     programBySlotType.content[`show.${slot.showId}`] ?? [],
@@ -758,6 +849,18 @@ function getShowProgramIterator(
     });
   }
 
+  return programs;
+}
+
+function getShowProgramIterator(
+  programBySlotType: ProgramMapping,
+  slot: BaseShowProgrammingSlot,
+  random: Random,
+  resume?: ProgramIteratorSnapshot,
+  weighting?: PassWeighting,
+) {
+  const programs = showSlotPrograms(programBySlotType, slot);
+
   switch (slot.order) {
     case 'next':
     case 'alphanumeric':
@@ -769,7 +872,9 @@ function getShowProgramIterator(
         resume,
       );
     case 'shuffle':
-      return new ContentProgramShuffleIterator(programs, random, resume);
+      return weighting
+        ? weightedContentShuffle(programs, random, weighting, resume)
+        : new ContentProgramShuffleIterator(programs, random, resume);
     case 'ordered_shuffle':
       return new ContentProgramChunkedShuffle(
         programs,

@@ -142,6 +142,20 @@ type PlexTypes = {
 
 export type PlexApiClientFactory = (opts: ApiClientOptions) => PlexApiClient;
 
+const PlexWatchStateSchema = z.object({
+  ratingKey: z.string(),
+  viewCount: z.number().optional(),
+  lastViewedAt: z.number().optional(),
+});
+
+export type PlexWatchState = z.infer<typeof PlexWatchStateSchema>;
+
+const PlexWatchStateResponseSchema = z.object({
+  MediaContainer: z.object({
+    Metadata: PlexWatchStateSchema.array().optional(),
+  }),
+});
+
 export class PlexApiClient extends MediaSourceApiClient<PlexTypes> {
   protected redacter = new PlexRequestRedacter();
 
@@ -603,6 +617,26 @@ export class PlexApiClient extends MediaSourceApiClient<PlexTypes> {
       50,
       `/library/collections/${collectionId}/children`,
     );
+  }
+
+  /**
+   * Read-only watch state of the given items for the account this client is
+   * signed in with. One request lists several comma-separated rating keys.
+   */
+  async getWatchStates(
+    ratingKeys: readonly string[],
+  ): Promise<QueryResult<PlexWatchState[]>> {
+    if (ratingKeys.length === 0) {
+      return this.makeSuccessResult([]);
+    }
+    const result = await this.doTypeCheckedGet(
+      `/library/metadata/${ratingKeys.map(encodeURIComponent).join(',')}`,
+      PlexWatchStateResponseSchema,
+    );
+    if (result.isFailure()) {
+      return this.makeErrorResult(result.error.type, result.error.message);
+    }
+    return this.makeSuccessResult(result.get().MediaContainer.Metadata ?? []);
   }
 
   async getLibraryCount(libraryId: string) {

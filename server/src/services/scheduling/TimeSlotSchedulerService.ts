@@ -2,6 +2,7 @@ import { TimeSlotScheduleSchema } from '@tunarr/types/api';
 import dayjs from 'dayjs';
 import { inject, injectable } from 'inversify';
 import { z } from 'zod/v4';
+import { ProgramWatchStateService } from './ProgramWatchStateService.ts';
 import { SlotSchedulerHelper } from './SlotSchedulerHelper.ts';
 import { SlotIteratorStateSchema } from './slotIteratorState.ts';
 import {
@@ -63,6 +64,8 @@ export class TimeSlotSchedulerService {
   constructor(
     @inject(SlotSchedulerHelper)
     private slotSchedulerHelper: SlotSchedulerHelper,
+    @inject(ProgramWatchStateService)
+    private watchStateService: ProgramWatchStateService,
   ) {}
 
   async schedule(
@@ -88,6 +91,10 @@ export class TimeSlotSchedulerService {
         iteratorState: request.iteratorState,
         endTime:
           request.endTime !== undefined ? dayjs(request.endTime) : undefined,
+        watchedProgramIds:
+          request.schedule.rerunWeighting?.mode === 'unwatched'
+            ? await this.watchStateService.watchedProgramIds(slotPrograms)
+            : undefined,
       },
     );
   }

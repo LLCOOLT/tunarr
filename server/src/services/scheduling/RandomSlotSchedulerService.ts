@@ -6,6 +6,7 @@ import {
   type RandomSlotCycleResult,
   RandomSlotScheduler,
 } from './RandomSlotsService.ts';
+import { ProgramWatchStateService } from './ProgramWatchStateService.ts';
 import { SlotSchedulerHelper } from './SlotSchedulerHelper.ts';
 import { SlotIteratorStateSchema } from './slotIteratorState.ts';
 
@@ -63,6 +64,8 @@ export class SlotSchedulerService {
   constructor(
     @inject(SlotSchedulerHelper)
     private slotSchedulerHelper: SlotSchedulerHelper,
+    @inject(ProgramWatchStateService)
+    private watchStateService: ProgramWatchStateService,
   ) {}
 
   async schedule(
@@ -78,6 +81,11 @@ export class SlotSchedulerService {
       );
     }
 
+    const watchedProgramIds =
+      request.schedule.rerunWeighting?.mode === 'unwatched'
+        ? await this.watchStateService.watchedProgramIds(slotPrograms)
+        : undefined;
+
     return new RandomSlotScheduler(request.schedule, {
       strictValidation: request.strictValidation ?? false,
     }).generateSchedule(
@@ -89,6 +97,7 @@ export class SlotSchedulerService {
         iteratorState: request.iteratorState,
         endTime:
           request.endTime !== undefined ? dayjs(request.endTime) : undefined,
+        watchedProgramIds,
       },
     );
   }

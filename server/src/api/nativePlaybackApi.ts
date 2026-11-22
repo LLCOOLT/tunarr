@@ -90,6 +90,9 @@ export function mapLineupItemToPlaybackItem(
       streamUrl: buildStreamUrl(baseUrl, channelId, itemStartedAtMs),
       durationMs: program.duration,
       source: playbackSourceForProgram(program, serverIdentifier),
+      ...(lineupItem.type === 'program' && lineupItem.isPremiere
+        ? { isPremiere: true }
+        : {}),
     };
   }
 
