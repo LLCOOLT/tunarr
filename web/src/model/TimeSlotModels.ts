@@ -76,4 +76,6 @@ export type TimeSlotForm = {
   period: 'day' | 'week';
   slots: TimeSlotViewModel[];
   type: 'time';
+  premieres?: TimeSlotSchedule['premieres'];
+  rerunWeighting?: TimeSlotSchedule['rerunWeighting'];
 };

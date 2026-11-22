@@ -1,5 +1,9 @@
 import { RotatingLoopIcon } from '@/components/base/LoadingIcon.tsx';
 import ChannelLineupList from '@/components/channel_config/ChannelLineupList.tsx';
+import {
+  PremieresControl,
+  RerunWeightingControl,
+} from '@/components/slot_scheduler/CycleFeatureControls.tsx';
 import { RebuildEachCycleControl } from '@/components/slot_scheduler/RebuildEachCycleControl.tsx';
 import { TimeSlotFormProvider } from '@/components/slot_scheduler/TimeSlotFormProvider.tsx';
 import { TimeSlotTable } from '@/components/slot_scheduler/TimeSlotTable.tsx';
@@ -542,6 +546,29 @@ export default function TimeSlotEditorPage() {
             checked={rebuildEachCycle.value}
             onChange={rebuildEachCycle.setValue}
           />
+          <Stack gap={3} sx={{ mt: 3 }}>
+            <Controller
+              control={control}
+              name="premieres"
+              render={({ field }) => (
+                <PremieresControl
+                  value={field.value}
+                  onChange={field.onChange}
+                  rebuildEachCycle={rebuildEachCycle.value}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="rerunWeighting"
+              render={({ field }) => (
+                <RerunWeightingControl
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+          </Stack>
           <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
             <Button
               variant="contained"

@@ -1,3 +1,7 @@
+import {
+  PremieresControl,
+  RerunWeightingControl,
+} from '@/components/slot_scheduler/CycleFeatureControls.tsx';
 import { RebuildEachCycleControl } from '@/components/slot_scheduler/RebuildEachCycleControl.tsx';
 import { RandomSlotFormProvider } from '@/components/slot_scheduler/RandomSlotFormProvider.tsx';
 import { RandomSlotSettingsForm } from '@/components/slot_scheduler/RandomSlotSettingsForm';
@@ -37,6 +41,7 @@ import {
 } from 'lodash-es';
 import React, { useCallback, useMemo, useState } from 'react';
 import {
+  Controller,
   FormProvider,
   useFieldArray,
   useForm,
@@ -279,6 +284,29 @@ export default function RandomSlotEditorPage() {
               checked={rebuildEachCycle.value}
               onChange={rebuildEachCycle.setValue}
             />
+            <Stack gap={3} sx={{ mt: 3 }}>
+              <Controller
+                control={control}
+                name="premieres"
+                render={({ field }) => (
+                  <PremieresControl
+                    value={field.value}
+                    onChange={field.onChange}
+                    rebuildEachCycle={rebuildEachCycle.value}
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name="rerunWeighting"
+                render={({ field }) => (
+                  <RerunWeightingControl
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+            </Stack>
           </SlotProgrammingOptionsProvider>
         </PaddedPaper>
         <PaddedPaper>

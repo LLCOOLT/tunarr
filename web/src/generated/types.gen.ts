@@ -4044,6 +4044,15 @@ export type GetApiChannelsByIdProgrammingResponses = {
             }>;
             timeZoneOffset: number;
             startTomorrow?: boolean;
+            premieres?: {
+                enabled: boolean;
+                timeOfDayMs: number;
+                maxPerDay: number;
+            };
+            rerunWeighting?: {
+                mode: 'off' | 'least_recent' | 'unwatched';
+                strength: number;
+            };
         } | {
             type: 'random';
             flexPreference: 'distribute' | 'end';
@@ -4275,6 +4284,15 @@ export type GetApiChannelsByIdProgrammingResponses = {
             randomDistribution: 'uniform' | 'weighted' | 'none';
             periodMs?: number;
             lockWeights: boolean;
+            premieres?: {
+                enabled: boolean;
+                timeOfDayMs: number;
+                maxPerDay: number;
+            };
+            rerunWeighting?: {
+                mode: 'off' | 'least_recent' | 'unwatched';
+                strength: number;
+            };
         };
         dynamicContentConfig?: {
             contentSources: Array<{
@@ -4575,6 +4593,15 @@ export type PostApiChannelsByIdProgrammingData = {
             }>;
             timeZoneOffset: number;
             startTomorrow?: boolean;
+            premieres?: {
+                enabled: boolean;
+                timeOfDayMs?: number;
+                maxPerDay?: number;
+            };
+            rerunWeighting?: {
+                mode: 'off' | 'least_recent' | 'unwatched';
+                strength?: number;
+            };
         };
         seed?: Array<number>;
         discardCount?: number;
@@ -4813,6 +4840,15 @@ export type PostApiChannelsByIdProgrammingData = {
             randomDistribution: 'uniform' | 'weighted' | 'none';
             periodMs?: number;
             lockWeights?: boolean;
+            premieres?: {
+                enabled: boolean;
+                timeOfDayMs?: number;
+                maxPerDay?: number;
+            };
+            rerunWeighting?: {
+                mode: 'off' | 'least_recent' | 'unwatched';
+                strength?: number;
+            };
         };
         seed?: Array<number>;
         discardCount?: number;
@@ -5137,6 +5173,15 @@ export type PostApiChannelsByIdProgrammingResponses = {
             }>;
             timeZoneOffset: number;
             startTomorrow?: boolean;
+            premieres?: {
+                enabled: boolean;
+                timeOfDayMs: number;
+                maxPerDay: number;
+            };
+            rerunWeighting?: {
+                mode: 'off' | 'least_recent' | 'unwatched';
+                strength: number;
+            };
         } | {
             type: 'random';
             flexPreference: 'distribute' | 'end';
@@ -5368,6 +5413,15 @@ export type PostApiChannelsByIdProgrammingResponses = {
             randomDistribution: 'uniform' | 'weighted' | 'none';
             periodMs?: number;
             lockWeights: boolean;
+            premieres?: {
+                enabled: boolean;
+                timeOfDayMs: number;
+                maxPerDay: number;
+            };
+            rerunWeighting?: {
+                mode: 'off' | 'least_recent' | 'unwatched';
+                strength: number;
+            };
         };
         dynamicContentConfig?: {
             contentSources: Array<{
@@ -5803,6 +5857,15 @@ export type GetApiChannelsByIdScheduleResponses = {
             }>;
             timeZoneOffset: number;
             startTomorrow?: boolean;
+            premieres?: {
+                enabled: boolean;
+                timeOfDayMs: number;
+                maxPerDay: number;
+            };
+            rerunWeighting?: {
+                mode: 'off' | 'least_recent' | 'unwatched';
+                strength: number;
+            };
         } | {
             type: 'random';
             flexPreference: 'distribute' | 'end';
@@ -6172,6 +6235,15 @@ export type GetApiChannelsByIdScheduleResponses = {
             randomDistribution: 'uniform' | 'weighted' | 'none';
             periodMs?: number;
             lockWeights: boolean;
+            premieres?: {
+                enabled: boolean;
+                timeOfDayMs: number;
+                maxPerDay: number;
+            };
+            rerunWeighting?: {
+                mode: 'off' | 'least_recent' | 'unwatched';
+                strength: number;
+            };
         };
         rebuildEachCycle?: boolean;
     };
@@ -6265,6 +6337,7 @@ export type GetApiChannelsAllLineupsResponses = {
             stop: number;
             isPaused: boolean;
             timeRemaining?: number;
+            isPremiere?: boolean;
         } | {
             type: 'custom';
             duration: number;
@@ -6285,6 +6358,7 @@ export type GetApiChannelsAllLineupsResponses = {
             stop: number;
             isPaused: boolean;
             timeRemaining?: number;
+            isPremiere?: boolean;
         } | {
             type: 'redirect';
             duration: number;
@@ -6296,6 +6370,7 @@ export type GetApiChannelsAllLineupsResponses = {
             stop: number;
             isPaused: boolean;
             timeRemaining?: number;
+            isPremiere?: boolean;
         } | {
             type: 'flex';
             duration: number;
@@ -6312,6 +6387,7 @@ export type GetApiChannelsAllLineupsResponses = {
             stop: number;
             isPaused: boolean;
             timeRemaining?: number;
+            isPremiere?: boolean;
             title: string;
         }>;
     }>;
@@ -6375,6 +6451,7 @@ export type GetApiChannelsByIdLineupResponses = {
             stop: number;
             isPaused: boolean;
             timeRemaining?: number;
+            isPremiere?: boolean;
         } | {
             type: 'custom';
             duration: number;
@@ -6395,6 +6472,7 @@ export type GetApiChannelsByIdLineupResponses = {
             stop: number;
             isPaused: boolean;
             timeRemaining?: number;
+            isPremiere?: boolean;
         } | {
             type: 'redirect';
             duration: number;
@@ -6406,6 +6484,7 @@ export type GetApiChannelsByIdLineupResponses = {
             stop: number;
             isPaused: boolean;
             timeRemaining?: number;
+            isPremiere?: boolean;
         } | {
             type: 'flex';
             duration: number;
@@ -6422,6 +6501,7 @@ export type GetApiChannelsByIdLineupResponses = {
             stop: number;
             isPaused: boolean;
             timeRemaining?: number;
+            isPremiere?: boolean;
             title: string;
         }>;
     };
@@ -6470,6 +6550,7 @@ export type GetApiChannelsByIdNowPlayingResponses = {
         stop: number;
         isPaused: boolean;
         timeRemaining?: number;
+        isPremiere?: boolean;
     } | {
         type: 'custom';
         duration: number;
@@ -6490,6 +6571,7 @@ export type GetApiChannelsByIdNowPlayingResponses = {
         stop: number;
         isPaused: boolean;
         timeRemaining?: number;
+        isPremiere?: boolean;
     } | {
         type: 'redirect';
         duration: number;
@@ -6501,6 +6583,7 @@ export type GetApiChannelsByIdNowPlayingResponses = {
         stop: number;
         isPaused: boolean;
         timeRemaining?: number;
+        isPremiere?: boolean;
     } | {
         type: 'flex';
         duration: number;
@@ -6517,6 +6600,7 @@ export type GetApiChannelsByIdNowPlayingResponses = {
         stop: number;
         isPaused: boolean;
         timeRemaining?: number;
+        isPremiere?: boolean;
         title: string;
     };
 };
@@ -6817,6 +6901,15 @@ export type PostApiChannelsByChannelIdScheduleTimeSlotsData = {
             }>;
             timeZoneOffset: number;
             startTomorrow?: boolean;
+            premieres?: {
+                enabled: boolean;
+                timeOfDayMs?: number;
+                maxPerDay?: number;
+            };
+            rerunWeighting?: {
+                mode: 'off' | 'least_recent' | 'unwatched';
+                strength?: number;
+            };
         };
     };
     path: {
@@ -7136,6 +7229,15 @@ export type PostApiChannelsByChannelIdScheduleSlotsData = {
             randomDistribution: 'uniform' | 'weighted' | 'none';
             periodMs?: number;
             lockWeights?: boolean;
+            premieres?: {
+                enabled: boolean;
+                timeOfDayMs?: number;
+                maxPerDay?: number;
+            };
+            rerunWeighting?: {
+                mode: 'off' | 'least_recent' | 'unwatched';
+                strength?: number;
+            };
         };
     };
     path: {
@@ -7268,6 +7370,7 @@ export type GetApiChannelsByIdNativePlaybackResponses = {
                 serverIdentifier?: string;
                 externalKey: string;
             };
+            isPremiere?: boolean;
         } | {
             itemStartedAtMs: number;
             remainingMs: number;
@@ -7298,6 +7401,7 @@ export type GetApiChannelsByIdNativePlaybackResponses = {
                 serverIdentifier?: string;
                 externalKey: string;
             };
+            isPremiere?: boolean;
         } | {
             itemStartedAtMs: number;
             remainingMs: number;
@@ -11017,6 +11121,7 @@ export type GetApiGuideChannelsResponses = {
                 stop: number;
                 isPaused: boolean;
                 timeRemaining?: number;
+                isPremiere?: boolean;
             } | {
                 type: 'custom';
                 duration: number;
@@ -11037,6 +11142,7 @@ export type GetApiGuideChannelsResponses = {
                 stop: number;
                 isPaused: boolean;
                 timeRemaining?: number;
+                isPremiere?: boolean;
             } | {
                 type: 'redirect';
                 duration: number;
@@ -11048,6 +11154,7 @@ export type GetApiGuideChannelsResponses = {
                 stop: number;
                 isPaused: boolean;
                 timeRemaining?: number;
+                isPremiere?: boolean;
             } | {
                 type: 'flex';
                 duration: number;
@@ -11064,6 +11171,7 @@ export type GetApiGuideChannelsResponses = {
                 stop: number;
                 isPaused: boolean;
                 timeRemaining?: number;
+                isPremiere?: boolean;
                 title: string;
             }>;
         };
@@ -15439,6 +15547,15 @@ export type GetApiAutoChannelsPresetsResponses = {
             }>;
             timeZoneOffset: number;
             startTomorrow?: boolean;
+            premieres?: {
+                enabled: boolean;
+                timeOfDayMs: number;
+                maxPerDay: number;
+            };
+            rerunWeighting?: {
+                mode: 'off' | 'least_recent' | 'unwatched';
+                strength: number;
+            };
         } | {
             type: 'random';
             flexPreference: 'distribute' | 'end';
@@ -15500,6 +15617,15 @@ export type GetApiAutoChannelsPresetsResponses = {
             randomDistribution: 'uniform' | 'weighted' | 'none';
             periodMs?: number;
             lockWeights: boolean;
+            premieres?: {
+                enabled: boolean;
+                timeOfDayMs: number;
+                maxPerDay: number;
+            };
+            rerunWeighting?: {
+                mode: 'off' | 'least_recent' | 'unwatched';
+                strength: number;
+            };
         };
         dynamicRequirements?: boolean;
         minBlocks?: number;

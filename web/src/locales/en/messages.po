@@ -1063,6 +1063,14 @@ msgstr "Buffer size effects how frequently ffmpeg reconsiders the output bitrate
 msgid "Builder"
 msgstr "Builder"
 
+#: src/components/slot_scheduler/RebuildEachCycleControl.tsx
+msgid "Builds a new cycle from this schedule before the current one ends, instead of looping the same programs. Shuffled slots get a new order every cycle and ordered shows continue where they left off."
+msgstr "Builds a new cycle from this schedule before the current one ends, instead of looping the same programs. Shuffled slots get a new order every cycle and ordered shows continue where they left off."
+
+#: src/components/slot_scheduler/RebuildEachCycleControl.tsx
+msgid "Builds a new cycle from this schedule before the current one ends, instead of looping the same programs. Shuffled slots get a new order every cycle and ordered shows continue where they left off. A cycle is one schedule period, so Days to Precalculate is not used."
+msgstr "Builds a new cycle from this schedule before the current one ends, instead of looping the same programs. Shuffled slots get a new order every cycle and ordered shows continue where they left off. A cycle is one schedule period, so Days to Precalculate is not used."
+
 #: src/pages/system/TroubleshootPage.tsx
 msgid "Built-in"
 msgstr "Built-in"
@@ -2472,6 +2480,14 @@ msgstr "Fallback"
 msgid "Fallback Mode"
 msgstr "Fallback Mode"
 
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Favor what aired longest ago"
+msgstr "Favor what aired longest ago"
+
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Favor what aired longest ago and unwatched"
+msgstr "Favor what aired longest ago and unwatched"
+
 #: src/pages/settings/FeaturesSettingsPage.tsx
 msgid "Feature flags saved!"
 msgstr "Feature flags saved!"
@@ -3829,6 +3845,10 @@ msgstr "Nvidia Capabilities"
 msgid "of the following"
 msgstr "of the following"
 
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Off"
+msgstr "Off"
+
 #: src/components/channel_config/ChannelPropertiesEditor.tsx
 #: src/components/channels/ChannelCard.tsx
 #: src/components/channels/ChannelsView.tsx
@@ -4140,6 +4160,18 @@ msgstr "Preferred languages in priority order. Type a code to add custom."
 msgid "Preferred subtitle languages"
 msgstr "Preferred subtitle languages"
 
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Premiere new episodes"
+msgstr "Premiere new episodes"
+
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Premiere time"
+msgstr "Premiere time"
+
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Premieres per slot per day"
+msgstr "Premieres per slot per day"
+
 #: src/components/programming_controls/AddBlockShuffleModal.tsx
 #: src/components/programming_controls/AddBlockShuffleModal.tsx
 msgid "Preset"
@@ -4327,6 +4359,10 @@ msgstr "Read Less"
 #: src/components/programs/MediaDetailCard.tsx
 msgid "Read More"
 msgstr "Read More"
+
+#: src/components/slot_scheduler/RebuildEachCycleControl.tsx
+msgid "Rebuild each cycle"
+msgstr "Rebuild each cycle"
 
 #: src/components/programming_controls/AddRedirectModal.tsx
 msgid "Redirect duration"
@@ -4524,6 +4560,11 @@ msgstr "Replicate..."
 #: src/components/slot_scheduler/SlotLinkingControl.tsx
 msgid "Rerun"
 msgstr "Rerun"
+
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Rerun weighting"
+msgstr "Rerun weighting"
 
 #: src/pages/settings/ScannerSettingsPage.tsx
 #: src/pages/settings/ScannerSettingsPage.tsx
@@ -5027,6 +5068,10 @@ msgstr "Shuffle Programming"
 msgid "Shuffle programming in a channel, optionally grouping programs by certain criteria."
 msgstr "Shuffle programming in a channel, optionally grouping programs by certain criteria."
 
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Shuffled slots still play every program once before repeating, but order each pass so that programs that aired recently on this channel come later. The unwatched option also moves programs your Plex account has already watched later. Tunarr only reads watch state; it never changes it."
+msgstr "Shuffled slots still play every program once before repeating, but order each pass so that programs that aired recently on this channel come later. The unwatched option also moves programs your Plex account has already watched later. Tunarr only reads watch state; it never changes it."
+
 #: src/components/slot_scheduler/MidRollConfigPanel.tsx
 msgid "Skip mid-roll for programs shorter than this"
 msgstr "Skip mid-roll for programs shorter than this"
@@ -5265,6 +5310,10 @@ msgstr "Stream this channel through the experimental ErsatzTV next backend inste
 #: src/components/channels/ChannelsView.tsx
 msgid "Streaming"
 msgstr "Streaming"
+
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Strength"
+msgstr "Strength"
 
 #: src/components/settings/ffmpeg/TranscodeConfigSettingsForm.tsx
 #~ msgid "Submit"
@@ -5543,6 +5592,10 @@ msgstr "This channel keeps its current programs but will no longer use its slot 
 #: src/components/channel_config/ChannelPropertiesEditor.tsx
 msgid "This channel number has already been used"
 msgstr "This channel number has already been used"
+
+#: src/components/channel_config/ChannelPropertiesEditor.tsx
+msgid "This channel's schedule rebuilds each cycle and sets the start time itself. Save the schedule again to restart it."
+msgstr "This channel's schedule rebuilds each cycle and sets the start time itself. Save the schedule again to restart it."
 
 #: src/components/slot_scheduler/SlotProgrammingTooLongWarningDetails.tsx
 msgid "This could cause the following slot's programs to go unscheduled. Possible solutions include:"
@@ -5903,6 +5956,10 @@ msgstr "Tunarr will update Plex's \"now playing\" state while channels are activ
 msgid "Tuner Count"
 msgstr "Tuner Count"
 
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Turn on Rebuild each cycle to use premieres."
+msgstr "Turn on Rebuild each cycle to use premieres."
+
 #: src/components/programming_controls/AddBlockShuffleModal.tsx
 msgid "TV shows are grouped by show"
 msgstr "TV shows are grouped by show"
@@ -6174,6 +6231,10 @@ msgstr "Welcome to Tunarr!"
 #: src/pages/system/TroubleshootPage.tsx
 msgid "What the ErsatzTV next worker recorded the last few times this channel failed to play an item. Attach it to a bug report."
 msgstr "What the ErsatzTV next worker recorded the last few times this channel failed to play an item. Attach it to a bug report."
+
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "When a library scan adds a new episode of a show this schedule plays, it airs at the time below on the next day, in the first slot that plays that show. It then joins the normal rotation. The guide marks the airing as a premiere."
+msgstr "When a library scan adds a new episode of a show this schedule plays, it airs at the time below on the next day, in the first slot that plays that show. It then joins the normal rotation. The guide marks the airing as a premiere."
 
 #: src/components/channel_config/WatermarkTimingFields.tsx
 msgid "When enabled, intermittent watermarks fade in immediately when a stream is initialized. When disabled, the first watermark fade-in occurs after a full period."

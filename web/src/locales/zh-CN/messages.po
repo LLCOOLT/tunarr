@@ -1063,6 +1063,14 @@ msgstr "缓冲区大小影响 ffmpeg 重新评估输出码率的频率。<0>了�
 msgid "Builder"
 msgstr "编排器"
 
+#: src/components/slot_scheduler/RebuildEachCycleControl.tsx
+msgid "Builds a new cycle from this schedule before the current one ends, instead of looping the same programs. Shuffled slots get a new order every cycle and ordered shows continue where they left off."
+msgstr ""
+
+#: src/components/slot_scheduler/RebuildEachCycleControl.tsx
+msgid "Builds a new cycle from this schedule before the current one ends, instead of looping the same programs. Shuffled slots get a new order every cycle and ordered shows continue where they left off. A cycle is one schedule period, so Days to Precalculate is not used."
+msgstr ""
+
 #: src/pages/system/TroubleshootPage.tsx
 msgid "Built-in"
 msgstr ""
@@ -2472,6 +2480,14 @@ msgstr "兜底"
 msgid "Fallback Mode"
 msgstr "兜底模式"
 
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Favor what aired longest ago"
+msgstr ""
+
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Favor what aired longest ago and unwatched"
+msgstr ""
+
 #: src/pages/settings/FeaturesSettingsPage.tsx
 msgid "Feature flags saved!"
 msgstr "功能开关已保存！"
@@ -3829,6 +3845,10 @@ msgstr "Nvidia 支持能力"
 msgid "of the following"
 msgstr ""
 
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Off"
+msgstr ""
+
 #: src/components/channel_config/ChannelPropertiesEditor.tsx
 #: src/components/channels/ChannelCard.tsx
 #: src/components/channels/ChannelsView.tsx
@@ -4140,6 +4160,18 @@ msgstr ""
 msgid "Preferred subtitle languages"
 msgstr ""
 
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Premiere new episodes"
+msgstr ""
+
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Premiere time"
+msgstr ""
+
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Premieres per slot per day"
+msgstr ""
+
 #: src/components/programming_controls/AddBlockShuffleModal.tsx
 #: src/components/programming_controls/AddBlockShuffleModal.tsx
 msgid "Preset"
@@ -4327,6 +4359,10 @@ msgstr "收起"
 #: src/components/programs/MediaDetailCard.tsx
 msgid "Read More"
 msgstr "展开阅读"
+
+#: src/components/slot_scheduler/RebuildEachCycleControl.tsx
+msgid "Rebuild each cycle"
+msgstr ""
 
 #: src/components/programming_controls/AddRedirectModal.tsx
 msgid "Redirect duration"
@@ -4524,6 +4560,11 @@ msgstr "复制…"
 #: src/components/slot_scheduler/SlotLinkingControl.tsx
 msgid "Rerun"
 msgstr "重播"
+
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Rerun weighting"
+msgstr ""
 
 #: src/pages/settings/ScannerSettingsPage.tsx
 #: src/pages/settings/ScannerSettingsPage.tsx
@@ -5027,6 +5068,10 @@ msgstr "随机打乱节目"
 msgid "Shuffle programming in a channel, optionally grouping programs by certain criteria."
 msgstr "随机打乱频道中的节目，可选择按特定条件对节目分组。"
 
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Shuffled slots still play every program once before repeating, but order each pass so that programs that aired recently on this channel come later. The unwatched option also moves programs your Plex account has already watched later. Tunarr only reads watch state; it never changes it."
+msgstr ""
+
 #: src/components/slot_scheduler/MidRollConfigPanel.tsx
 msgid "Skip mid-roll for programs shorter than this"
 msgstr "时长短于此值的节目跳过中插广告"
@@ -5265,6 +5310,10 @@ msgstr ""
 #: src/components/channels/ChannelsView.tsx
 msgid "Streaming"
 msgstr "播放中"
+
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Strength"
+msgstr ""
 
 #: src/components/settings/ffmpeg/TranscodeConfigSettingsForm.tsx
 #~ msgid "Submit"
@@ -5543,6 +5592,10 @@ msgstr ""
 #: src/components/channel_config/ChannelPropertiesEditor.tsx
 msgid "This channel number has already been used"
 msgstr "该频道号已被占用"
+
+#: src/components/channel_config/ChannelPropertiesEditor.tsx
+msgid "This channel's schedule rebuilds each cycle and sets the start time itself. Save the schedule again to restart it."
+msgstr ""
 
 #: src/components/slot_scheduler/SlotProgrammingTooLongWarningDetails.tsx
 msgid "This could cause the following slot's programs to go unscheduled. Possible solutions include:"
@@ -5903,6 +5956,10 @@ msgstr ""
 msgid "Tuner Count"
 msgstr "调谐器数量"
 
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "Turn on Rebuild each cycle to use premieres."
+msgstr ""
+
 #: src/components/programming_controls/AddBlockShuffleModal.tsx
 msgid "TV shows are grouped by show"
 msgstr "剧集按剧名分组"
@@ -6173,6 +6230,10 @@ msgstr "欢迎使用 Tunarr！"
 
 #: src/pages/system/TroubleshootPage.tsx
 msgid "What the ErsatzTV next worker recorded the last few times this channel failed to play an item. Attach it to a bug report."
+msgstr ""
+
+#: src/components/slot_scheduler/CycleFeatureControls.tsx
+msgid "When a library scan adds a new episode of a show this schedule plays, it airs at the time below on the next day, in the first slot that plays that show. It then joins the normal rotation. The guide marks the airing as a premiere."
 msgstr ""
 
 #: src/components/channel_config/WatermarkTimingFields.tsx
