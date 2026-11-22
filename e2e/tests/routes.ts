@@ -66,6 +66,7 @@ export const ROUTES: Record<string, RouteTarget> = {
   '/channels': () => ['/channels'],
   '/channels/new': () => ['/channels/new'],
   '/channels/auto-create': () => ['/channels/auto-create'],
+  '/channels/blueprints': () => ['/channels/blueprints'],
   '/channels/test': { skip: 'Placeholder route that renders static text' },
   '/channels/$channelId': eachChannel(''),
   '/channels/$channelId/': eachChannel('/'),

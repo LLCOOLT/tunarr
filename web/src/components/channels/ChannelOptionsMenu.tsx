@@ -1,9 +1,11 @@
 import type { channelListOptions } from '@/types/index.ts';
 import { Trans, useLingui } from '@lingui/react/macro';
 import {
+  Architecture,
   ContentCopy,
   CopyAll,
   Delete,
+  Download,
   Edit,
   Stop,
   Tv,
@@ -13,15 +15,22 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import type { Channel } from '@tunarr/types';
 import { isEmpty, trimEnd } from 'lodash-es';
+import { useSnackbar } from 'notistack';
 import type { SyntheticEvent } from 'react';
 import { useCallback, useState } from 'react';
 import { deleteApiChannelsByIdSessionsMutation } from '../../generated/@tanstack/react-query.gen.ts';
+import { getApiErrorMessage } from '../../helpers/apiError.ts';
 import { invalidateTaggedQueries } from '../../helpers/queryUtil.ts';
 import { isNonEmptyString } from '../../helpers/util.ts';
+import {
+  fetchChannelBlueprint,
+  useImportBlueprint,
+} from '../../hooks/useBlueprints.ts';
 import { useCopyToClipboard } from '../../hooks/useCopyToClipboard.ts';
 import { useCreateChannel } from '../../hooks/useCreateChannel.ts';
 import { useSettings } from '../../store/settings/selectors.ts';
 import type { PopoverAnchorEl } from '../../types/dom.ts';
+import { downloadBlueprint } from '../blueprints/blueprintFile.ts';
 import { ChannelDeleteDialog } from './ChannelDeleteDialog.tsx';
 
 type Props = {
@@ -66,6 +75,39 @@ export const ChannelOptionsMenu = ({
   );
 
   const duplicateChannelMutation = useCreateChannel();
+
+  // A slot channel whose slots all play smart collections reads back as a
+  // blueprint; any other channel answers with the slot that blocks it.
+  const snackbar = useSnackbar();
+  const importBlueprintMutation = useImportBlueprint();
+  const withChannelBlueprint = useCallback(
+    (action: 'save' | 'export') => {
+      fetchChannelBlueprint(row.id)
+        .then((blueprint) => {
+          if (action === 'export') {
+            downloadBlueprint(blueprint);
+            return;
+          }
+          importBlueprintMutation.mutate(blueprint, {
+            onSuccess: () => {
+              snackbar.enqueueSnackbar({
+                variant: 'success',
+                message: t`Saved “${row.name}” as a blueprint`,
+              });
+            },
+          });
+        })
+        .catch((err: unknown) => {
+          snackbar.enqueueSnackbar({
+            variant: 'error',
+            message:
+              getApiErrorMessage(err) ??
+              t`This channel cannot be saved as a blueprint`,
+          });
+        });
+    },
+    [importBlueprintMutation, row.id, row.name, snackbar, t],
+  );
 
   const handleClose = useCallback(
     (e: SyntheticEvent) => {
@@ -228,6 +270,34 @@ export const ChannelOptionsMenu = ({
             </ListItemText>
           </MenuItem>
         )}
+        <MenuItem
+          onClick={(e) => {
+            e.stopPropagation();
+            withChannelBlueprint('save');
+            onClose(e);
+          }}
+        >
+          <ListItemIcon>
+            <Architecture />
+          </ListItemIcon>
+          <ListItemText>
+            <Trans>Save as Blueprint</Trans>
+          </ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={(e) => {
+            e.stopPropagation();
+            withChannelBlueprint('export');
+            onClose(e);
+          }}
+        >
+          <ListItemIcon>
+            <Download />
+          </ListItemIcon>
+          <ListItemText>
+            <Trans>Export as Blueprint</Trans>
+          </ListItemText>
+        </MenuItem>
         {!hideItems?.includes('delete') && (
           <MenuItem
             onClick={(e) => {
