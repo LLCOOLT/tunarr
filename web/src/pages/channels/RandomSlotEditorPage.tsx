@@ -1,3 +1,4 @@
+import { RebuildEachCycleControl } from '@/components/slot_scheduler/RebuildEachCycleControl.tsx';
 import { RandomSlotFormProvider } from '@/components/slot_scheduler/RandomSlotFormProvider.tsx';
 import { RandomSlotSettingsForm } from '@/components/slot_scheduler/RandomSlotSettingsForm';
 import { RandomSlotTable } from '@/components/slot_scheduler/RandomSlotTable.tsx';
@@ -56,6 +57,7 @@ import {
   unavailableCustomShowSlotIndexes,
 } from '../../helpers/slotSchedulerUtil';
 import { useChannelSchedule } from '../../hooks/useChannelSchedule.ts';
+import { useRebuildEachCycle } from '../../hooks/useRebuildEachCycle.ts';
 import { useUpdateLineup } from '../../hooks/useUpdateLineup';
 import type { RandomSlotForm } from '../../model/SlotModels.ts';
 import { resetLineup } from '../../store/channelEditor/actions';
@@ -95,6 +97,11 @@ export default function RandomSlotEditorPage() {
     useState<Maybe<{ seed?: number[]; discardCount?: number }>>();
 
   const hasExistingTimeSlotSchedule = channelSchedule.schedule?.type === 'time';
+  const rebuildEachCycle = useRebuildEachCycle(
+    'random',
+    channelSchedule.schedule?.type,
+    channelSchedule.rebuildEachCycle,
+  );
 
   const randomSlotForm = useForm<RandomSlotForm>({
     defaultValues:
@@ -117,7 +124,7 @@ export default function RandomSlotEditorPage() {
   });
 
   const { control, getValues, formState, reset } = randomSlotForm;
-  const { isDirty } = formState;
+  const isDirty = formState.isDirty || rebuildEachCycle.isDirty;
 
   const slotArray = useFieldArray({
     control,
@@ -135,7 +142,8 @@ export default function RandomSlotEditorPage() {
   const resetLineupToSaved = useCallback(() => {
     resetLineup();
     reset();
-  }, [reset]);
+    rebuildEachCycle.reset();
+  }, [reset, rebuildEachCycle]);
 
   const onSave = () => {
     const value = getValues();
@@ -152,28 +160,36 @@ export default function RandomSlotEditorPage() {
       lineupItemAppearsInSchedule(getValues('slots'), item),
     );
 
-    updateLineupMutation.mutate({
-      path: {
-        id: channel!.id,
+    updateLineupMutation.mutate(
+      {
+        path: {
+          id: channel!.id,
+        },
+        body: {
+          type: 'random',
+          rebuildEachCycle: rebuildEachCycle.value,
+          schedule,
+          programs: seq.collect(filteredLineup, (l) => {
+            switch (l.type) {
+              case 'custom':
+              case 'content':
+                return l.id;
+              case 'redirect':
+              case 'flex':
+              case 'filler':
+                return null;
+            }
+          }),
+          seed: randomState?.seed,
+          discardCount: randomState?.discardCount,
+        },
       },
-      body: {
-        type: 'random',
-        schedule,
-        programs: seq.collect(filteredLineup, (l) => {
-          switch (l.type) {
-            case 'custom':
-            case 'content':
-              return l.id;
-            case 'redirect':
-            case 'flex':
-            case 'filler':
-              return null;
-          }
-        }),
-        seed: randomState?.seed,
-        discardCount: randomState?.discardCount,
+      {
+        onSuccess() {
+          rebuildEachCycle.markSaved();
+        },
       },
-    });
+    );
   };
 
   const programFrequency = useMemo(() => {
@@ -257,6 +273,12 @@ export default function RandomSlotEditorPage() {
                 onCalculateEnd={onCalculateSlotsEnd}
               />
             </FormProvider>
+            <Divider sx={{ my: 2 }} />
+            <RebuildEachCycleControl
+              scheduleType="random"
+              checked={rebuildEachCycle.value}
+              onChange={rebuildEachCycle.setValue}
+            />
           </SlotProgrammingOptionsProvider>
         </PaddedPaper>
         <PaddedPaper>

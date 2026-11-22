@@ -1,5 +1,6 @@
 import { RotatingLoopIcon } from '@/components/base/LoadingIcon.tsx';
 import ChannelLineupList from '@/components/channel_config/ChannelLineupList.tsx';
+import { RebuildEachCycleControl } from '@/components/slot_scheduler/RebuildEachCycleControl.tsx';
 import { TimeSlotFormProvider } from '@/components/slot_scheduler/TimeSlotFormProvider.tsx';
 import { TimeSlotTable } from '@/components/slot_scheduler/TimeSlotTable.tsx';
 import {
@@ -80,6 +81,7 @@ import { invalidateTaggedQueries } from '../../helpers/queryUtil.ts';
 import { toggle } from '../../helpers/util.ts';
 import { useScheduleSlots } from '../../hooks/slot_scheduler/useScheduleSlots.ts';
 import { useChannelSchedule } from '../../hooks/useChannelSchedule.ts';
+import { useRebuildEachCycle } from '../../hooks/useRebuildEachCycle.ts';
 import { useUpdateLineup } from '../../hooks/useUpdateLineup.ts';
 import { resetLineup } from '../../store/channelEditor/actions.ts';
 import type { Maybe } from '../../types/util.ts';
@@ -129,6 +131,11 @@ export default function TimeSlotEditorPage() {
     useState<Maybe<{ seed?: number[]; discardCount?: number }>>();
 
   const [settingsOpen, setSettingsOpen] = useState(true);
+  const rebuildEachCycle = useRebuildEachCycle(
+    'time',
+    channelSchedule.schedule?.type,
+    channelSchedule.rebuildEachCycle,
+  );
 
   const theme = useTheme();
   const smallViewport = useMediaQuery(theme.breakpoints.down('sm'));
@@ -147,9 +154,10 @@ export default function TimeSlotEditorPage() {
     control,
     getValues,
     setValue,
-    formState: { isDirty, errors },
+    formState: { isDirty: formIsDirty, errors },
     reset,
   } = formMethods;
+  const isDirty = formIsDirty || rebuildEachCycle.isDirty;
 
   const slotArray = useFieldArray({
     control,
@@ -186,7 +194,8 @@ export default function TimeSlotEditorPage() {
   const resetLineupToSaved = useCallback(() => {
     resetLineup();
     reset();
-  }, [reset]);
+    rebuildEachCycle.reset();
+  }, [reset, rebuildEachCycle]);
 
   const onSave = () => {
     const schedule = {
@@ -207,6 +216,7 @@ export default function TimeSlotEditorPage() {
         },
         body: {
           type: 'time',
+          rebuildEachCycle: rebuildEachCycle.value,
           schedule,
           programs: seq.collect(filteredLineup, (l) => {
             switch (l.type) {
@@ -226,6 +236,7 @@ export default function TimeSlotEditorPage() {
       {
         onSuccess() {
           reset(schedule, { keepDirty: false });
+          rebuildEachCycle.markSaved();
         },
       },
     );
@@ -526,6 +537,11 @@ export default function TimeSlotEditorPage() {
             </Box>
           </Collapse>
           <Divider sx={{ my: 4 }} />
+          <RebuildEachCycleControl
+            scheduleType="time"
+            checked={rebuildEachCycle.value}
+            onChange={rebuildEachCycle.setValue}
+          />
           <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
             <Button
               variant="contained"

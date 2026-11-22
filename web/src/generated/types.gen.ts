@@ -6173,6 +6173,7 @@ export type GetApiChannelsByIdScheduleResponses = {
             periodMs?: number;
             lockWeights: boolean;
         };
+        rebuildEachCycle?: boolean;
     };
 };
 
@@ -7259,6 +7260,14 @@ export type GetApiChannelsByIdNativePlaybackResponses = {
             summary?: string;
             thumb?: string;
             streamUrl: string;
+            durationMs?: number;
+            source?: {
+                type: 'plex' | 'jellyfin' | 'emby';
+                mediaSourceId: string;
+                mediaSourceName: string;
+                serverIdentifier?: string;
+                externalKey: string;
+            };
         } | {
             itemStartedAtMs: number;
             remainingMs: number;
@@ -7281,6 +7290,14 @@ export type GetApiChannelsByIdNativePlaybackResponses = {
             summary?: string;
             thumb?: string;
             streamUrl: string;
+            durationMs?: number;
+            source?: {
+                type: 'plex' | 'jellyfin' | 'emby';
+                mediaSourceId: string;
+                mediaSourceName: string;
+                serverIdentifier?: string;
+                externalKey: string;
+            };
         } | {
             itemStartedAtMs: number;
             remainingMs: number;

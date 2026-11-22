@@ -1117,6 +1117,8 @@ export const channelsApi: RouterPluginAsyncCallback = async (fastify) => {
         response: {
           200: z.object({
             schedule: MaterializedSchedule.optional(),
+            // Whether the slot schedule is rebuilt at every cycle boundary.
+            rebuildEachCycle: z.boolean().optional(),
           }),
         },
       },
@@ -1132,7 +1134,11 @@ export const channelsApi: RouterPluginAsyncCallback = async (fastify) => {
         return res.send();
       }
 
-      return res.serializer(JSON.stringify).send({ schedule: result });
+      const lineup = await req.serverCtx.channelDB.loadLineup(req.params.id);
+      return res.serializer(JSON.stringify).send({
+        schedule: result,
+        rebuildEachCycle: lineup.rebuildEachCycle ?? false,
+      });
     },
   );
 };
