@@ -50,6 +50,10 @@ _Avoid_: custom show (in user-facing text)
 A scheduling rule — time slots or random slots — that the server evaluates to produce a channel's programming. Distinct from a **Lineup**: the schedule is a rule, the lineup is the resulting editable program list.
 _Avoid_: lineup, schedule
 
+**Blueprint**:
+A versioned, shareable channel recipe: roles with content rules (search DSL queries, never library or program ids), a schedule skeleton over those roles, and channel defaults. Creating a channel from one runs the auto-channel machinery. A built-in blueprint is a preset with its content filled in (`plans/channel-blueprints.md`).
+_Avoid_: template (infinite schedules' shareable templates are a separate, planned feature), preset (a built-in starting point in code)
+
 **Program lookup**:
 A `Record<id, ContentProgram>` cache used to materialize condensed program references into full content programs. Lives outside the **Lineup** and is passed into materialization.
 _Avoid_: program map, content map

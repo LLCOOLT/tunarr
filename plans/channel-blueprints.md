@@ -1,6 +1,7 @@
 # Channel Blueprints
 
-> **Status (11/22/2026):** Proposed. Needs a `design approved` issue before any code (AGENTS.md:
+> **Status (11/22/2026):** Built on the `plxnative/channel-blueprints` branch of a private fork, which
+> is not going upstream. Upstreaming it would need a `design approved` issue first (AGENTS.md:
 > new top-level feature, a migration, new cross-package API shapes). Overlaps slice 8 of infinite
 > schedules ("shareable templates", [#2103](https://github.com/chrisbenincasa/tunarr/issues/2103)),
 > so the design issue must say how the two meet. A draft of the issue is at the end of this file.
@@ -129,21 +130,24 @@ cannot drift from the preset schema.
 
 ## API (`server/src/api/blueprintsApi.ts`)
 
-| Method and path                       | Does                                                                                           |
-| ------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `GET /api/blueprints`                 | Built-ins and saved user blueprints                                                            |
-| `POST /api/blueprints/preview`        | `{ blueprint, scope }` → `previewContent` per role, plus the first 24 h the schedule would air |
-| `POST /api/blueprints/create-channel` | `{ blueprint, scope, channelName?, channelNumber?, seed? }` → `Channel`                        |
-| `POST /api/blueprints/import`         | Validates a blueprint JSON and saves it                                                        |
-| `GET /api/blueprints/:id/export`      | The saved blueprint as a JSON file                                                             |
-| `GET /api/channels/:id/blueprint`     | Builds a blueprint from a slot channel whose slots are all smart collections                   |
-| `DELETE /api/blueprints/:id`          | Deletes a user blueprint; built-ins are read-only                                              |
+| Method and path                       | Does                                                                         |
+| ------------------------------------- | ---------------------------------------------------------------------------- |
+| `GET /api/blueprints`                 | Built-ins and saved user blueprints                                          |
+| `POST /api/blueprints/preview`        | `{ blueprint, scope }` → `previewContent` per role                           |
+| `POST /api/blueprints/create-channel` | `{ blueprint, scope, channelName?, channelNumber?, seed? }` → `Channel`      |
+| `POST /api/blueprints/import`         | Validates a blueprint JSON and saves it                                      |
+| `GET /api/blueprints/:id/export`      | The saved blueprint as a JSON file                                           |
+| `GET /api/channels/:id/blueprint`     | Builds a blueprint from a slot channel whose slots are all smart collections |
+| `DELETE /api/blueprints/:id`          | Deletes a user blueprint; built-ins are read-only                            |
 
 - Export from a channel reads its schedule: each distinct smart-collection slot becomes a role,
   and the collection's query becomes the role's `query`. It works on any such channel, auto-created
   or not. A channel with show, playlist or filler-list slots returns 422 with the slot that blocks
   it.
-- The 24 h sample in preview runs the slot scheduler with a fixed seed and saves nothing.
+- Preview has no sample of what would air. The slot scheduler reads programs through saved smart
+  collections (`SlotSchedulerHelper.materializeSmartCollections`), so a sample needs either
+  collections written for a preview or a scheduler entry point that takes programs per slot. Left
+  out until one of those exists.
 
 ## Persistence
 
@@ -154,7 +158,7 @@ cannot drift from the preset schema.
 ## Web
 
 - Channel creation gains a **Start from a blueprint** step: a gallery grouped by category, then a
-  preview (counts per role, top shows, the 24 h sample), then name, number and library scope, then
+  preview (counts per role, top shows), then name, number and library scope, then
   Create.
 - **Import blueprint** (file picker) on the gallery, **Save as blueprint** and **Export** on a slot
   channel's page.

@@ -124,14 +124,6 @@ export type BlueprintPreviewRequest = z.infer<
   typeof BlueprintPreviewRequestSchema
 >;
 
-export const BlueprintSampleItemSchema = z.object({
-  startTimeOffsetMs: z.number(),
-  durationMs: z.number(),
-  type: z.enum(['content', 'flex']),
-  title: z.string().optional(),
-  showTitle: z.string().optional(),
-});
-
 export const BlueprintPreviewResponseSchema = z.object({
   roles: z.array(
     z.object({
@@ -139,9 +131,6 @@ export const BlueprintPreviewResponseSchema = z.object({
       label: z.string(),
       preview: ContentPreviewResponseSchema,
     }),
-  ),
-  sample: BlueprintSampleItemSchema.array().describe(
-    'The first 24 hours the schedule would air, with a fixed seed',
   ),
 });
 

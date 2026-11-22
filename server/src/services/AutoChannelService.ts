@@ -41,6 +41,14 @@ import { MeilisearchService } from './MeilisearchService.ts';
 import { resolveScheduleSkeleton } from './resolveScheduleSkeleton.ts';
 import { GlobalScheduler } from './Scheduler.js';
 
+export type CreateChannelOptions = {
+  /** The channel's name when the request names none. */
+  defaultName?: (channelNumber: number) => string;
+  /** A number to try first when the request names none. */
+  preferredNumber?: number;
+  iconPath?: string;
+};
+
 @injectable()
 export class AutoChannelService {
   @InjectLogger() declare private readonly logger: Logger;
@@ -101,7 +109,19 @@ export class AutoChannelService {
     if (!preset) {
       throw new GenericBadRequestError(`Preset not found: ${request.presetId}`);
     }
+    return this.createChannelFromPreset(preset, request);
+  }
 
+  /**
+   * Creates a channel from a preset value rather than a built-in id, so a
+   * blueprint (plans/channel-blueprints.md) can supply its own preset.
+   * `request.presetId` is ignored here.
+   */
+  async createChannelFromPreset(
+    preset: ChannelPreset,
+    request: AutoChannelCreateRequest,
+    options: CreateChannelOptions = {},
+  ): Promise<Channel> {
     const transcodeConfig = await this.transcodeConfigDB.getDefaultConfig();
     if (!transcodeConfig) {
       throw new Error('No default transcode config exists');
@@ -133,9 +153,12 @@ export class AutoChannelService {
 
     const channelNumber = await this.resolveChannelNumber(
       request.channelNumber,
+      options.preferredNumber,
     );
     const channelName =
-      request.channelName ?? `${preset.name} ${channelNumber}`;
+      request.channelName ??
+      options.defaultName?.(channelNumber) ??
+      `${preset.name} ${channelNumber}`;
 
     const createdCollectionIds: string[] = [];
     let createdChannelId: string | undefined;
@@ -211,7 +234,7 @@ export class AutoChannelService {
         startTime: Date.now(),
         groupTitle: 'Auto-Created',
         icon: {
-          path: '',
+          path: options.iconPath ?? '',
           width: 0,
           duration: 0,
           position: 'bottom-right',
@@ -376,7 +399,10 @@ export class AutoChannelService {
     }
   }
 
-  private async resolveChannelNumber(requested: number | undefined) {
+  private async resolveChannelNumber(
+    requested: number | undefined,
+    preferred?: number,
+  ) {
     const channels = await this.channelDB.getAllChannels();
     const usedNumbers = new Set(channels.map((c) => c.number));
 
@@ -389,7 +415,9 @@ export class AutoChannelService {
       return requested;
     }
 
-    let next = 1;
+    // A preferred number is a hint: when it is taken, the channel takes the
+    // first free number at or above it.
+    let next = preferred ?? 1;
     while (usedNumbers.has(next)) {
       next++;
     }
