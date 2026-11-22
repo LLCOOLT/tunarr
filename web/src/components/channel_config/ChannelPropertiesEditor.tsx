@@ -13,10 +13,12 @@ import {
   Typography,
 } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useCallback, useEffect, useRef } from 'react';
 import { Controller } from 'react-hook-form';
+import { getApiChannelsByIdScheduleOptions } from '../../generated/@tanstack/react-query.gen.ts';
 import { useChannelFormContext } from '../../hooks/useChannelFormContext.ts';
 import { useChannels } from '../../hooks/useChannels.ts';
 import useStore from '../../store/index.ts';
@@ -36,6 +38,18 @@ export function ChannelPropertiesEditor() {
     formState: { defaultValues },
   } = useChannelFormContext();
   const { data: channels } = useChannels();
+  // A slot schedule that rebuilds each cycle moves the start time itself at
+  // every cycle boundary, so the picker is read-only there
+  // (plans/schedules-reshuffle-on-loop.md, Web).
+  const channelIsSaved =
+    !!channel && channels.some((saved) => saved.id === channel.id);
+  const { data: channelSchedule } = useQuery({
+    ...getApiChannelsByIdScheduleOptions({
+      path: { id: channel?.id ?? '' },
+    }),
+    enabled: channelIsSaved,
+  });
+  const startTimeSetBySchedule = channelSchedule?.rebuildEachCycle === true;
 
   const onloadstart = () => {};
 
@@ -183,11 +197,15 @@ export function ChannelPropertiesEditor() {
                 render={({ field }) => (
                   <DateTimePicker
                     label={t`Programming Start`}
+                    readOnly={startTimeSetBySchedule}
                     slotProps={{
                       textField: {
                         margin: 'normal',
                         fullWidth: true,
                         onBlur: field.onBlur,
+                        helperText: startTimeSetBySchedule
+                          ? t`This channel's schedule rebuilds each cycle and sets the start time itself. Save the schedule again to restart it.`
+                          : undefined,
                       },
                     }}
                     value={dayjs(field.value)}
