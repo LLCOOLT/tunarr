@@ -372,13 +372,23 @@ describe('BlueprintService with the real auto-channel service', () => {
           Promise.resolve({ uuid: channel.transcodeConfigId }),
       } as unknown as TranscodeConfigDB,
     );
+    const cycleBoundary = {
+      initializeChannel: vi.fn((_channelId: string) => Promise.resolve()),
+    };
     const service = new RealBlueprintService(
       {} as BlueprintDB,
       auto,
       channelDB as unknown as ChannelDB,
       smartCollectionsDB as unknown as SmartCollectionsDB,
+      cycleBoundary,
     );
-    return { service, smartCollectionsDB, channelDB, savedChannels };
+    return {
+      service,
+      smartCollectionsDB,
+      channelDB,
+      savedChannels,
+      cycleBoundary,
+    };
   }
 
   test('makes one smart collection per role, named from the blueprint', async () => {
@@ -414,6 +424,53 @@ describe('BlueprintService with the real auto-channel service', () => {
         ],
       },
     });
+  });
+
+  test('a blueprint that rebuilds each cycle saves that and builds the first cycles', async () => {
+    const { service, channelDB, cycleBoundary } = await realService();
+
+    await expect(
+      service.createChannel({
+        blueprint: { ...NinetiesSitcomsBlueprint, rebuildEachCycle: true },
+        scope: { libraryIds: ['lib-1'] },
+      }),
+    ).rejects.toThrow('could not be retrieved');
+
+    const lineup = channelDB.updateLineup.mock.calls[0] as unknown[];
+    expect(lineup[1]).toMatchObject({ rebuildEachCycle: true });
+    expect(cycleBoundary.initializeChannel).toHaveBeenCalledExactlyOnceWith(
+      channel.id,
+    );
+  });
+
+  test('a blueprint that does not rebuild saves a fixed lineup', async () => {
+    const { service, channelDB, cycleBoundary } = await realService();
+
+    await expect(
+      service.createChannel({
+        blueprint: { ...NinetiesSitcomsBlueprint, rebuildEachCycle: false },
+        scope: { libraryIds: ['lib-1'] },
+      }),
+    ).rejects.toThrow('could not be retrieved');
+
+    const lineup = channelDB.updateLineup.mock.calls[0] as unknown[];
+    expect(lineup[1]).toMatchObject({ rebuildEachCycle: false });
+    expect(cycleBoundary.initializeChannel).not.toHaveBeenCalled();
+  });
+
+  test('a failed first cycle build rolls the channel back', async () => {
+    const { service, channelDB, cycleBoundary } = await realService();
+    cycleBoundary.initializeChannel.mockRejectedValueOnce(
+      new Error('cycle build failed'),
+    );
+
+    await expect(
+      service.createChannel({
+        blueprint: { ...NinetiesSitcomsBlueprint, rebuildEachCycle: true },
+        scope: { libraryIds: ['lib-1'] },
+      }),
+    ).rejects.toThrow('cycle build failed');
+    expect(channelDB.deleteChannel).toHaveBeenCalled();
   });
 
   test('refuses a blueprint whose slots name a missing role', async () => {

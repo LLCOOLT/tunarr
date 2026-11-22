@@ -47,6 +47,15 @@ export type CreateChannelOptions = {
   /** A number to try first when the request names none. */
   preferredNumber?: number;
   iconPath?: string;
+  /**
+   * Save the schedule as one that rebuilds each cycle, and build its first
+   * cycles with `initializeCycles` once the lineup is saved. The callback is
+   * the cycle boundary service's `initializeChannel`; it runs before the
+   * create is reported, so a failure rolls the channel back.
+   */
+  rebuildEachCycle?: {
+    initializeCycles: (channelId: string) => Promise<void>;
+  };
 };
 
 @injectable()
@@ -264,15 +273,22 @@ export class AutoChannelService {
               programs: allProgramIds,
               schedule: scheduleConfig,
               seed,
+              rebuildEachCycle: !!options.rebuildEachCycle,
             }
           : {
               type: 'random',
               programs: allProgramIds,
               schedule: scheduleConfig,
               seed,
+              rebuildEachCycle: !!options.rebuildEachCycle,
             };
 
       await this.channelDB.updateLineup(createdChannelId, lineupRequest);
+      if (options.rebuildEachCycle) {
+        // What the save wrote is one pass of the schedule; replace it with the
+        // channel's first cycles, as a slot save through the channels API does.
+        await options.rebuildEachCycle.initializeCycles(createdChannelId);
+      }
     } catch (err) {
       await this.rollBackCreate(createdChannelId, createdCollectionIds);
       throw err;

@@ -23,6 +23,7 @@ import { SmartCollectionsDB } from '../db/SmartCollectionsDB.ts';
 import { GenericBadRequestError } from '../types/errors.ts';
 import type { Maybe } from '../types/util.ts';
 import { AutoChannelService } from './AutoChannelService.ts';
+import { SlotCycleBoundaryService } from './scheduling/SlotCycleBoundaryService.ts';
 
 /** A request that names a channel or blueprint that does not exist. */
 export class BlueprintNotFoundError extends Error {}
@@ -39,6 +40,8 @@ export class BlueprintService {
     @inject(AutoChannelService) private autoChannelService: AutoChannelService,
     @inject(ChannelDB) private channelDB: ChannelDB,
     @inject(SmartCollectionsDB) private smartCollectionsDB: SmartCollectionsDB,
+    @inject(SlotCycleBoundaryService)
+    private cycleBoundary: Pick<SlotCycleBoundaryService, 'initializeChannel'>,
   ) {}
 
   async list(): Promise<SavedBlueprint[]> {
@@ -112,6 +115,12 @@ export class BlueprintService {
         defaultName: (n) => blueprintChannelName(blueprint, n),
         preferredNumber: blueprint.channel.numberHint,
         iconPath: blueprint.channel.icon,
+        rebuildEachCycle: blueprint.rebuildEachCycle
+          ? {
+              initializeCycles: (channelId) =>
+                this.cycleBoundary.initializeChannel(channelId),
+            }
+          : undefined,
       },
     );
   }
