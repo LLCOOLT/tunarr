@@ -15906,6 +15906,1583 @@ export type PostApiAutoChannelsCreateResponses = {
 
 export type PostApiAutoChannelsCreateResponse = PostApiAutoChannelsCreateResponses[keyof PostApiAutoChannelsCreateResponses];
 
+export type GetBlueprintsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/blueprints';
+};
+
+export type GetBlueprintsResponses = {
+    /**
+     * Default Response
+     */
+    200: Array<{
+        id: string;
+        builtIn: boolean;
+        blueprint: {
+            blueprintVersion: 1;
+            id: string;
+            name: string;
+            description: string;
+            category: 'simple' | 'classic-tv' | 'movie' | 'music' | 'binge' | 'genre' | 'people' | 'decade' | 'network' | 'custom';
+            channel: {
+                /**
+                 * Channel name; {name} and {number} are replaced
+                 */
+                namePattern?: string;
+                numberHint?: number;
+                /**
+                 * Icon URL
+                 */
+                icon?: string;
+            };
+            roles: Array<{
+                role: string;
+                label: string;
+                description?: string;
+                rules?: {
+                    programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                    /**
+                     * Program or show genres
+                     */
+                    genres?: Array<string>;
+                    yearFrom?: number;
+                    yearTo?: number;
+                    minMinutes?: number;
+                    maxMinutes?: number;
+                    contentRatings?: Array<string>;
+                    /**
+                     * Program studios, or the show network for episodes
+                     */
+                    studios?: Array<string>;
+                };
+                query: {
+                    /**
+                     * Existing search DSL filter (e.g., 'genre = "Action" AND year > 1980')
+                     */
+                    filterString?: string;
+                    /**
+                     * Free-text search via Meilisearch
+                     */
+                    keywords?: string;
+                    /**
+                     * Restrict to specific program types
+                     */
+                    programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                };
+                minPrograms: number;
+            }>;
+            schedule: {
+                type: 'time';
+                flexPreference: 'distribute' | 'end';
+                latenessMs: number;
+                maxDays: number;
+                overflow: {
+                    type: 'duration';
+                    maxMs: number;
+                } | {
+                    type: 'oneExtra';
+                };
+                padMs: number;
+                period: 'day' | 'week';
+                slots: Array<{
+                    startTime: number;
+                    padMs?: number;
+                    overflow?: {
+                        type: 'duration';
+                        maxMs: number;
+                    } | {
+                        type: 'oneExtra';
+                    };
+                    latenessMs?: number;
+                    type: 'role';
+                    order: 'next' | 'shuffle' | 'ordered_shuffle' | 'alphanumeric' | 'chronological';
+                    direction: 'asc' | 'desc';
+                    id: string;
+                    iterationGroup?: string;
+                    linkMode?: 'continue' | 'rerun';
+                    rerunOverflow?: 'flex' | 'continue';
+                    filler?: Array<{
+                        types: Array<'head' | 'pre' | 'post' | 'tail' | 'fallback' | 'mid'>;
+                        fillerListId: string;
+                        fillerOrder: 'shuffle_prefer_short' | 'shuffle_prefer_long' | 'uniform';
+                    }>;
+                    midRoll?: {
+                        intervalMs?: number;
+                        breakRule?: {
+                            type: 'fixed_interval';
+                            intervalMs: number;
+                        } | {
+                            type: 'percentage';
+                            points: Array<number>;
+                        } | {
+                            type: 'initial_then_interval';
+                            initialDelayMs: number;
+                            intervalMs: number;
+                        };
+                        maxBreaks: number;
+                        minProgramDurationMs: number;
+                        tailBufferMs: number;
+                        breakDurationMs?: number;
+                        breakDurationMinMs?: number;
+                        breakDurationMaxMs?: number;
+                        programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                        strategy: 'eager' | 'lazy';
+                    };
+                    /**
+                     * A role from the preset's content requirements
+                     */
+                    role: string;
+                }>;
+                timeZoneOffset: number;
+                startTomorrow?: boolean;
+                premieres?: {
+                    enabled: boolean;
+                    timeOfDayMs: number;
+                    maxPerDay: number;
+                };
+                rerunWeighting?: {
+                    mode: 'off' | 'least_recent' | 'unwatched';
+                    strength: number;
+                };
+            } | {
+                type: 'random';
+                flexPreference: 'distribute' | 'end';
+                maxDays: number;
+                padMs: number;
+                padStyle: 'slot' | 'episode';
+                slots: Array<{
+                    id: string;
+                    iterationGroup?: string;
+                    linkMode?: 'continue' | 'rerun';
+                    rerunOverflow?: 'flex' | 'continue';
+                    filler?: Array<{
+                        types: Array<'head' | 'pre' | 'post' | 'tail' | 'fallback' | 'mid'>;
+                        fillerListId: string;
+                        fillerOrder: 'shuffle_prefer_short' | 'shuffle_prefer_long' | 'uniform';
+                    }>;
+                    midRoll?: {
+                        intervalMs?: number;
+                        breakRule?: {
+                            type: 'fixed_interval';
+                            intervalMs: number;
+                        } | {
+                            type: 'percentage';
+                            points: Array<number>;
+                        } | {
+                            type: 'initial_then_interval';
+                            initialDelayMs: number;
+                            intervalMs: number;
+                        };
+                        maxBreaks: number;
+                        minProgramDurationMs: number;
+                        tailBufferMs: number;
+                        breakDurationMs?: number;
+                        breakDurationMinMs?: number;
+                        breakDurationMaxMs?: number;
+                        programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                        strategy: 'eager' | 'lazy';
+                    };
+                    cooldownMs: number;
+                    periodMs?: number;
+                    durationSpec: {
+                        durationMs: number;
+                        type: 'fixed';
+                    } | {
+                        type: 'dynamic';
+                        programCount: number;
+                    };
+                    weight: number;
+                    index?: number;
+                    order: 'next' | 'shuffle' | 'ordered_shuffle' | 'alphanumeric' | 'chronological';
+                    direction: 'asc' | 'desc';
+                    type: 'role';
+                    /**
+                     * A role from the preset's content requirements
+                     */
+                    role: string;
+                }>;
+                timeZoneOffset?: number;
+                randomDistribution: 'uniform' | 'weighted' | 'none';
+                periodMs?: number;
+                lockWeights: boolean;
+                premieres?: {
+                    enabled: boolean;
+                    timeOfDayMs: number;
+                    maxPerDay: number;
+                };
+                rerunWeighting?: {
+                    mode: 'off' | 'least_recent' | 'unwatched';
+                    strength: number;
+                };
+            };
+            /**
+             * Rebuild the schedule each cycle where the server supports it; ignored otherwise
+             */
+            rebuildEachCycle?: boolean;
+        };
+        createdAt?: number;
+        updatedAt?: number;
+    }>;
+};
+
+export type GetBlueprintsResponse = GetBlueprintsResponses[keyof GetBlueprintsResponses];
+
+export type PreviewBlueprintData = {
+    body: {
+        blueprint: {
+            blueprintVersion: 1;
+            id: string;
+            name: string;
+            description: string;
+            category: 'simple' | 'classic-tv' | 'movie' | 'music' | 'binge' | 'genre' | 'people' | 'decade' | 'network' | 'custom';
+            channel?: {
+                /**
+                 * Channel name; {name} and {number} are replaced
+                 */
+                namePattern?: string;
+                numberHint?: number;
+                /**
+                 * Icon URL
+                 */
+                icon?: string;
+            };
+            roles: Array<{
+                role: string;
+                label: string;
+                description?: string;
+                rules?: {
+                    programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                    /**
+                     * Program or show genres
+                     */
+                    genres?: Array<string>;
+                    yearFrom?: number;
+                    yearTo?: number;
+                    minMinutes?: number;
+                    maxMinutes?: number;
+                    contentRatings?: Array<string>;
+                    /**
+                     * Program studios, or the show network for episodes
+                     */
+                    studios?: Array<string>;
+                };
+                query: {
+                    /**
+                     * Existing search DSL filter (e.g., 'genre = "Action" AND year > 1980')
+                     */
+                    filterString?: string;
+                    /**
+                     * Free-text search via Meilisearch
+                     */
+                    keywords?: string;
+                    /**
+                     * Restrict to specific program types
+                     */
+                    programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                };
+                minPrograms: number;
+            }>;
+            schedule: {
+                type: 'time';
+                flexPreference: 'distribute' | 'end';
+                latenessMs: number;
+                maxDays: number;
+                overflow?: {
+                    type: 'duration';
+                    maxMs: number;
+                } | {
+                    type: 'oneExtra';
+                };
+                padMs: number;
+                period: 'day' | 'week';
+                slots: Array<{
+                    startTime: number;
+                    padMs?: number;
+                    overflow?: {
+                        type: 'duration';
+                        maxMs: number;
+                    } | {
+                        type: 'oneExtra';
+                    };
+                    latenessMs?: number;
+                    type: 'role';
+                    order: 'next' | 'shuffle' | 'ordered_shuffle' | 'alphanumeric' | 'chronological';
+                    direction?: 'asc' | 'desc';
+                    id: string;
+                    iterationGroup?: string;
+                    linkMode?: 'continue' | 'rerun';
+                    rerunOverflow?: 'flex' | 'continue';
+                    filler?: Array<{
+                        types: Array<'head' | 'pre' | 'post' | 'tail' | 'fallback' | 'mid'>;
+                        fillerListId: string;
+                        fillerOrder?: 'shuffle_prefer_short' | 'shuffle_prefer_long' | 'uniform';
+                    }>;
+                    midRoll?: {
+                        intervalMs?: number;
+                        breakRule?: {
+                            type: 'fixed_interval';
+                            intervalMs: number;
+                        } | {
+                            type: 'percentage';
+                            points: Array<number>;
+                        } | {
+                            type: 'initial_then_interval';
+                            initialDelayMs: number;
+                            intervalMs: number;
+                        };
+                        maxBreaks: number;
+                        minProgramDurationMs: number;
+                        tailBufferMs?: number;
+                        breakDurationMs?: number;
+                        breakDurationMinMs?: number;
+                        breakDurationMaxMs?: number;
+                        programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                        strategy?: 'eager' | 'lazy';
+                    };
+                    /**
+                     * A role from the preset's content requirements
+                     */
+                    role: string;
+                }>;
+                timeZoneOffset: number;
+                startTomorrow?: boolean;
+                premieres?: {
+                    enabled: boolean;
+                    timeOfDayMs?: number;
+                    maxPerDay?: number;
+                };
+                rerunWeighting?: {
+                    mode: 'off' | 'least_recent' | 'unwatched';
+                    strength?: number;
+                };
+            } | {
+                type: 'random';
+                flexPreference: 'distribute' | 'end';
+                maxDays: number;
+                padMs: number;
+                padStyle: 'slot' | 'episode';
+                slots: Array<{
+                    id: string;
+                    iterationGroup?: string;
+                    linkMode?: 'continue' | 'rerun';
+                    rerunOverflow?: 'flex' | 'continue';
+                    filler?: Array<{
+                        types: Array<'head' | 'pre' | 'post' | 'tail' | 'fallback' | 'mid'>;
+                        fillerListId: string;
+                        fillerOrder?: 'shuffle_prefer_short' | 'shuffle_prefer_long' | 'uniform';
+                    }>;
+                    midRoll?: {
+                        intervalMs?: number;
+                        breakRule?: {
+                            type: 'fixed_interval';
+                            intervalMs: number;
+                        } | {
+                            type: 'percentage';
+                            points: Array<number>;
+                        } | {
+                            type: 'initial_then_interval';
+                            initialDelayMs: number;
+                            intervalMs: number;
+                        };
+                        maxBreaks: number;
+                        minProgramDurationMs: number;
+                        tailBufferMs?: number;
+                        breakDurationMs?: number;
+                        breakDurationMinMs?: number;
+                        breakDurationMaxMs?: number;
+                        programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                        strategy?: 'eager' | 'lazy';
+                    };
+                    cooldownMs: number;
+                    periodMs?: number;
+                    durationSpec?: {
+                        durationMs: number;
+                        type: 'fixed';
+                    } | {
+                        type: 'dynamic';
+                        programCount: number;
+                    };
+                    weight: number;
+                    index?: number;
+                    order: 'next' | 'shuffle' | 'ordered_shuffle' | 'alphanumeric' | 'chronological';
+                    direction?: 'asc' | 'desc';
+                    type: 'role';
+                    /**
+                     * A role from the preset's content requirements
+                     */
+                    role: string;
+                }>;
+                timeZoneOffset?: number;
+                randomDistribution: 'uniform' | 'weighted' | 'none';
+                periodMs?: number;
+                lockWeights?: boolean;
+                premieres?: {
+                    enabled: boolean;
+                    timeOfDayMs?: number;
+                    maxPerDay?: number;
+                };
+                rerunWeighting?: {
+                    mode: 'off' | 'least_recent' | 'unwatched';
+                    strength?: number;
+                };
+            };
+            /**
+             * Rebuild the schedule each cycle where the server supports it; ignored otherwise
+             */
+            rebuildEachCycle?: boolean;
+        };
+        scope?: {
+            libraryIds?: Array<string>;
+            mediaSourceIds?: Array<string>;
+        };
+    };
+    path?: never;
+    query?: never;
+    url: '/api/blueprints/preview';
+};
+
+export type PreviewBlueprintErrors = {
+    /**
+     * Default Response
+     */
+    400: {
+        message: string;
+    };
+    /**
+     * Default Response
+     */
+    500: {
+        message: string;
+    };
+};
+
+export type PreviewBlueprintError = PreviewBlueprintErrors[keyof PreviewBlueprintErrors];
+
+export type PreviewBlueprintResponses = {
+    /**
+     * Default Response
+     */
+    200: {
+        roles: Array<{
+            role: string;
+            label: string;
+            preview: {
+                totalPrograms: number;
+                byType: {
+                    [key: string]: number;
+                };
+                topShows: Array<{
+                    name: string;
+                    episodeCount: number;
+                }>;
+                totalDurationMs: number;
+                /**
+                 * First ~20 program IDs for display
+                 */
+                sampleIds: Array<string>;
+            };
+        }>;
+    };
+};
+
+export type PreviewBlueprintResponse = PreviewBlueprintResponses[keyof PreviewBlueprintResponses];
+
+export type CreateChannelFromBlueprintData = {
+    body: {
+        blueprint: {
+            blueprintVersion: 1;
+            id: string;
+            name: string;
+            description: string;
+            category: 'simple' | 'classic-tv' | 'movie' | 'music' | 'binge' | 'genre' | 'people' | 'decade' | 'network' | 'custom';
+            channel?: {
+                /**
+                 * Channel name; {name} and {number} are replaced
+                 */
+                namePattern?: string;
+                numberHint?: number;
+                /**
+                 * Icon URL
+                 */
+                icon?: string;
+            };
+            roles: Array<{
+                role: string;
+                label: string;
+                description?: string;
+                rules?: {
+                    programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                    /**
+                     * Program or show genres
+                     */
+                    genres?: Array<string>;
+                    yearFrom?: number;
+                    yearTo?: number;
+                    minMinutes?: number;
+                    maxMinutes?: number;
+                    contentRatings?: Array<string>;
+                    /**
+                     * Program studios, or the show network for episodes
+                     */
+                    studios?: Array<string>;
+                };
+                query: {
+                    /**
+                     * Existing search DSL filter (e.g., 'genre = "Action" AND year > 1980')
+                     */
+                    filterString?: string;
+                    /**
+                     * Free-text search via Meilisearch
+                     */
+                    keywords?: string;
+                    /**
+                     * Restrict to specific program types
+                     */
+                    programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                };
+                minPrograms: number;
+            }>;
+            schedule: {
+                type: 'time';
+                flexPreference: 'distribute' | 'end';
+                latenessMs: number;
+                maxDays: number;
+                overflow?: {
+                    type: 'duration';
+                    maxMs: number;
+                } | {
+                    type: 'oneExtra';
+                };
+                padMs: number;
+                period: 'day' | 'week';
+                slots: Array<{
+                    startTime: number;
+                    padMs?: number;
+                    overflow?: {
+                        type: 'duration';
+                        maxMs: number;
+                    } | {
+                        type: 'oneExtra';
+                    };
+                    latenessMs?: number;
+                    type: 'role';
+                    order: 'next' | 'shuffle' | 'ordered_shuffle' | 'alphanumeric' | 'chronological';
+                    direction?: 'asc' | 'desc';
+                    id: string;
+                    iterationGroup?: string;
+                    linkMode?: 'continue' | 'rerun';
+                    rerunOverflow?: 'flex' | 'continue';
+                    filler?: Array<{
+                        types: Array<'head' | 'pre' | 'post' | 'tail' | 'fallback' | 'mid'>;
+                        fillerListId: string;
+                        fillerOrder?: 'shuffle_prefer_short' | 'shuffle_prefer_long' | 'uniform';
+                    }>;
+                    midRoll?: {
+                        intervalMs?: number;
+                        breakRule?: {
+                            type: 'fixed_interval';
+                            intervalMs: number;
+                        } | {
+                            type: 'percentage';
+                            points: Array<number>;
+                        } | {
+                            type: 'initial_then_interval';
+                            initialDelayMs: number;
+                            intervalMs: number;
+                        };
+                        maxBreaks: number;
+                        minProgramDurationMs: number;
+                        tailBufferMs?: number;
+                        breakDurationMs?: number;
+                        breakDurationMinMs?: number;
+                        breakDurationMaxMs?: number;
+                        programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                        strategy?: 'eager' | 'lazy';
+                    };
+                    /**
+                     * A role from the preset's content requirements
+                     */
+                    role: string;
+                }>;
+                timeZoneOffset: number;
+                startTomorrow?: boolean;
+                premieres?: {
+                    enabled: boolean;
+                    timeOfDayMs?: number;
+                    maxPerDay?: number;
+                };
+                rerunWeighting?: {
+                    mode: 'off' | 'least_recent' | 'unwatched';
+                    strength?: number;
+                };
+            } | {
+                type: 'random';
+                flexPreference: 'distribute' | 'end';
+                maxDays: number;
+                padMs: number;
+                padStyle: 'slot' | 'episode';
+                slots: Array<{
+                    id: string;
+                    iterationGroup?: string;
+                    linkMode?: 'continue' | 'rerun';
+                    rerunOverflow?: 'flex' | 'continue';
+                    filler?: Array<{
+                        types: Array<'head' | 'pre' | 'post' | 'tail' | 'fallback' | 'mid'>;
+                        fillerListId: string;
+                        fillerOrder?: 'shuffle_prefer_short' | 'shuffle_prefer_long' | 'uniform';
+                    }>;
+                    midRoll?: {
+                        intervalMs?: number;
+                        breakRule?: {
+                            type: 'fixed_interval';
+                            intervalMs: number;
+                        } | {
+                            type: 'percentage';
+                            points: Array<number>;
+                        } | {
+                            type: 'initial_then_interval';
+                            initialDelayMs: number;
+                            intervalMs: number;
+                        };
+                        maxBreaks: number;
+                        minProgramDurationMs: number;
+                        tailBufferMs?: number;
+                        breakDurationMs?: number;
+                        breakDurationMinMs?: number;
+                        breakDurationMaxMs?: number;
+                        programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                        strategy?: 'eager' | 'lazy';
+                    };
+                    cooldownMs: number;
+                    periodMs?: number;
+                    durationSpec?: {
+                        durationMs: number;
+                        type: 'fixed';
+                    } | {
+                        type: 'dynamic';
+                        programCount: number;
+                    };
+                    weight: number;
+                    index?: number;
+                    order: 'next' | 'shuffle' | 'ordered_shuffle' | 'alphanumeric' | 'chronological';
+                    direction?: 'asc' | 'desc';
+                    type: 'role';
+                    /**
+                     * A role from the preset's content requirements
+                     */
+                    role: string;
+                }>;
+                timeZoneOffset?: number;
+                randomDistribution: 'uniform' | 'weighted' | 'none';
+                periodMs?: number;
+                lockWeights?: boolean;
+                premieres?: {
+                    enabled: boolean;
+                    timeOfDayMs?: number;
+                    maxPerDay?: number;
+                };
+                rerunWeighting?: {
+                    mode: 'off' | 'least_recent' | 'unwatched';
+                    strength?: number;
+                };
+            };
+            /**
+             * Rebuild the schedule each cycle where the server supports it; ignored otherwise
+             */
+            rebuildEachCycle?: boolean;
+        };
+        scope?: {
+            libraryIds?: Array<string>;
+            mediaSourceIds?: Array<string>;
+        };
+        channelName?: string;
+        channelNumber?: number;
+        seed?: number;
+    };
+    path?: never;
+    query?: never;
+    url: '/api/blueprints/create-channel';
+};
+
+export type CreateChannelFromBlueprintErrors = {
+    /**
+     * Default Response
+     */
+    400: {
+        message: string;
+    };
+    /**
+     * Default Response
+     */
+    500: {
+        message: string;
+    };
+};
+
+export type CreateChannelFromBlueprintError = CreateChannelFromBlueprintErrors[keyof CreateChannelFromBlueprintErrors];
+
+export type CreateChannelFromBlueprintResponses = {
+    /**
+     * Default Response
+     */
+    201: {
+        disableFillerOverlay: boolean;
+        duration: number;
+        fallback?: Array<{
+            artistName?: string;
+            albumName?: string;
+            channel?: string;
+            customOrder?: number;
+            customShowId?: string;
+            customShowName?: string;
+            date?: string;
+            duration: number;
+            episode?: number;
+            episodeIcon?: string;
+            file?: string;
+            id: string;
+            icon?: string;
+            key?: string;
+            plexFile?: string;
+            rating?: string;
+            externalKey?: string;
+            season?: number;
+            seasonIcon?: string;
+            serverKey?: string;
+            showIcon?: string;
+            showTitle?: string;
+            sourceType: 'plex' | 'jellyfin' | 'emby' | 'local';
+            summary?: string;
+            title?: string;
+            type: 'movie' | 'episode' | 'track' | 'redirect' | 'custom' | 'flex';
+            year?: number;
+        }>;
+        fillerCollections?: Array<{
+            id: string;
+            weight: number;
+            cooldownSeconds: number;
+        }>;
+        fillerRepeatCooldown?: number;
+        groupTitle: string;
+        guideFlexTitle?: string;
+        guideMinimumDuration: number;
+        icon: {
+            path: string;
+            width: number;
+            duration: number;
+            position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+            useDefaultIconFallback?: boolean;
+        };
+        id: string;
+        name: string;
+        number: number;
+        offline: {
+            picture?: string;
+            soundtrack?: string;
+            mode: 'pic' | 'clip';
+        };
+        startTime: number;
+        stealth: boolean;
+        transcoding?: {
+            targetResolution?: {
+                widthPx: number;
+                heightPx: number;
+            };
+            videoBitrate?: number;
+            videoBufferSize?: number;
+        };
+        watermark?: {
+            url?: string;
+            enabled: boolean;
+            position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+            width: number;
+            verticalMargin: number;
+            horizontalMargin: number;
+            duration: number;
+            fixedSize?: boolean;
+            animated?: boolean;
+            opacity: number;
+            fadeConfig?: Array<{
+                programType?: 'movie' | 'episode' | 'track' | 'music_video' | 'other_video';
+                periodMins: number;
+                leadingEdge?: boolean;
+            }>;
+        };
+        onDemand: {
+            enabled: boolean;
+        };
+        programCount: number;
+        streamMode: 'hls' | 'hls_slower' | 'mpegts' | 'hls_direct' | 'hls_direct_v2';
+        transcodeConfigId: string;
+        sessions?: Array<{
+            type: 'hls' | 'hls_slower' | 'mpegts' | 'hls_direct' | 'hls_direct_v2' | 'etv_next' | 'hls_concat' | 'hls_slower_concat' | 'mpegts_concat' | 'hls_direct_concat' | 'hls_direct_v2_concat' | 'etv_next_concat';
+            state: string;
+            numConnections: number;
+            connections: Array<{
+                ip: string;
+                userAgent?: string;
+                lastHeartbeat?: number;
+                lastHeartbeatStr?: string;
+            }>;
+        }>;
+        subtitlesEnabled: boolean;
+        useEtvNext: boolean;
+        subtitlePreferences?: Array<{
+            langugeCode: string;
+            priority: number;
+            allowImageBased: boolean;
+            allowExternal: boolean;
+            filter: 'none' | 'forced' | 'default' | 'any';
+        }>;
+        streamSelectionProfileId: string | null;
+    };
+};
+
+export type CreateChannelFromBlueprintResponse = CreateChannelFromBlueprintResponses[keyof CreateChannelFromBlueprintResponses];
+
+export type ImportBlueprintData = {
+    body?: {
+        [key: string]: unknown;
+    };
+    path?: never;
+    query?: never;
+    url: '/api/blueprints/import';
+};
+
+export type ImportBlueprintErrors = {
+    /**
+     * Default Response
+     */
+    400: {
+        message: string;
+    };
+    /**
+     * Default Response
+     */
+    500: {
+        message: string;
+    };
+};
+
+export type ImportBlueprintError = ImportBlueprintErrors[keyof ImportBlueprintErrors];
+
+export type ImportBlueprintResponses = {
+    /**
+     * Default Response
+     */
+    201: {
+        id: string;
+        builtIn: boolean;
+        blueprint: {
+            blueprintVersion: 1;
+            id: string;
+            name: string;
+            description: string;
+            category: 'simple' | 'classic-tv' | 'movie' | 'music' | 'binge' | 'genre' | 'people' | 'decade' | 'network' | 'custom';
+            channel: {
+                /**
+                 * Channel name; {name} and {number} are replaced
+                 */
+                namePattern?: string;
+                numberHint?: number;
+                /**
+                 * Icon URL
+                 */
+                icon?: string;
+            };
+            roles: Array<{
+                role: string;
+                label: string;
+                description?: string;
+                rules?: {
+                    programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                    /**
+                     * Program or show genres
+                     */
+                    genres?: Array<string>;
+                    yearFrom?: number;
+                    yearTo?: number;
+                    minMinutes?: number;
+                    maxMinutes?: number;
+                    contentRatings?: Array<string>;
+                    /**
+                     * Program studios, or the show network for episodes
+                     */
+                    studios?: Array<string>;
+                };
+                query: {
+                    /**
+                     * Existing search DSL filter (e.g., 'genre = "Action" AND year > 1980')
+                     */
+                    filterString?: string;
+                    /**
+                     * Free-text search via Meilisearch
+                     */
+                    keywords?: string;
+                    /**
+                     * Restrict to specific program types
+                     */
+                    programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                };
+                minPrograms: number;
+            }>;
+            schedule: {
+                type: 'time';
+                flexPreference: 'distribute' | 'end';
+                latenessMs: number;
+                maxDays: number;
+                overflow: {
+                    type: 'duration';
+                    maxMs: number;
+                } | {
+                    type: 'oneExtra';
+                };
+                padMs: number;
+                period: 'day' | 'week';
+                slots: Array<{
+                    startTime: number;
+                    padMs?: number;
+                    overflow?: {
+                        type: 'duration';
+                        maxMs: number;
+                    } | {
+                        type: 'oneExtra';
+                    };
+                    latenessMs?: number;
+                    type: 'role';
+                    order: 'next' | 'shuffle' | 'ordered_shuffle' | 'alphanumeric' | 'chronological';
+                    direction: 'asc' | 'desc';
+                    id: string;
+                    iterationGroup?: string;
+                    linkMode?: 'continue' | 'rerun';
+                    rerunOverflow?: 'flex' | 'continue';
+                    filler?: Array<{
+                        types: Array<'head' | 'pre' | 'post' | 'tail' | 'fallback' | 'mid'>;
+                        fillerListId: string;
+                        fillerOrder: 'shuffle_prefer_short' | 'shuffle_prefer_long' | 'uniform';
+                    }>;
+                    midRoll?: {
+                        intervalMs?: number;
+                        breakRule?: {
+                            type: 'fixed_interval';
+                            intervalMs: number;
+                        } | {
+                            type: 'percentage';
+                            points: Array<number>;
+                        } | {
+                            type: 'initial_then_interval';
+                            initialDelayMs: number;
+                            intervalMs: number;
+                        };
+                        maxBreaks: number;
+                        minProgramDurationMs: number;
+                        tailBufferMs: number;
+                        breakDurationMs?: number;
+                        breakDurationMinMs?: number;
+                        breakDurationMaxMs?: number;
+                        programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                        strategy: 'eager' | 'lazy';
+                    };
+                    /**
+                     * A role from the preset's content requirements
+                     */
+                    role: string;
+                }>;
+                timeZoneOffset: number;
+                startTomorrow?: boolean;
+                premieres?: {
+                    enabled: boolean;
+                    timeOfDayMs: number;
+                    maxPerDay: number;
+                };
+                rerunWeighting?: {
+                    mode: 'off' | 'least_recent' | 'unwatched';
+                    strength: number;
+                };
+            } | {
+                type: 'random';
+                flexPreference: 'distribute' | 'end';
+                maxDays: number;
+                padMs: number;
+                padStyle: 'slot' | 'episode';
+                slots: Array<{
+                    id: string;
+                    iterationGroup?: string;
+                    linkMode?: 'continue' | 'rerun';
+                    rerunOverflow?: 'flex' | 'continue';
+                    filler?: Array<{
+                        types: Array<'head' | 'pre' | 'post' | 'tail' | 'fallback' | 'mid'>;
+                        fillerListId: string;
+                        fillerOrder: 'shuffle_prefer_short' | 'shuffle_prefer_long' | 'uniform';
+                    }>;
+                    midRoll?: {
+                        intervalMs?: number;
+                        breakRule?: {
+                            type: 'fixed_interval';
+                            intervalMs: number;
+                        } | {
+                            type: 'percentage';
+                            points: Array<number>;
+                        } | {
+                            type: 'initial_then_interval';
+                            initialDelayMs: number;
+                            intervalMs: number;
+                        };
+                        maxBreaks: number;
+                        minProgramDurationMs: number;
+                        tailBufferMs: number;
+                        breakDurationMs?: number;
+                        breakDurationMinMs?: number;
+                        breakDurationMaxMs?: number;
+                        programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                        strategy: 'eager' | 'lazy';
+                    };
+                    cooldownMs: number;
+                    periodMs?: number;
+                    durationSpec: {
+                        durationMs: number;
+                        type: 'fixed';
+                    } | {
+                        type: 'dynamic';
+                        programCount: number;
+                    };
+                    weight: number;
+                    index?: number;
+                    order: 'next' | 'shuffle' | 'ordered_shuffle' | 'alphanumeric' | 'chronological';
+                    direction: 'asc' | 'desc';
+                    type: 'role';
+                    /**
+                     * A role from the preset's content requirements
+                     */
+                    role: string;
+                }>;
+                timeZoneOffset?: number;
+                randomDistribution: 'uniform' | 'weighted' | 'none';
+                periodMs?: number;
+                lockWeights: boolean;
+                premieres?: {
+                    enabled: boolean;
+                    timeOfDayMs: number;
+                    maxPerDay: number;
+                };
+                rerunWeighting?: {
+                    mode: 'off' | 'least_recent' | 'unwatched';
+                    strength: number;
+                };
+            };
+            /**
+             * Rebuild the schedule each cycle where the server supports it; ignored otherwise
+             */
+            rebuildEachCycle?: boolean;
+        };
+        createdAt?: number;
+        updatedAt?: number;
+    };
+};
+
+export type ImportBlueprintResponse = ImportBlueprintResponses[keyof ImportBlueprintResponses];
+
+export type ExportBlueprintData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/blueprints/{id}/export';
+};
+
+export type ExportBlueprintErrors = {
+    /**
+     * Default Response
+     */
+    404: {
+        message: string;
+    };
+};
+
+export type ExportBlueprintError = ExportBlueprintErrors[keyof ExportBlueprintErrors];
+
+export type ExportBlueprintResponses = {
+    /**
+     * Default Response
+     */
+    200: {
+        blueprintVersion: 1;
+        id: string;
+        name: string;
+        description: string;
+        category: 'simple' | 'classic-tv' | 'movie' | 'music' | 'binge' | 'genre' | 'people' | 'decade' | 'network' | 'custom';
+        channel: {
+            /**
+             * Channel name; {name} and {number} are replaced
+             */
+            namePattern?: string;
+            numberHint?: number;
+            /**
+             * Icon URL
+             */
+            icon?: string;
+        };
+        roles: Array<{
+            role: string;
+            label: string;
+            description?: string;
+            rules?: {
+                programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                /**
+                 * Program or show genres
+                 */
+                genres?: Array<string>;
+                yearFrom?: number;
+                yearTo?: number;
+                minMinutes?: number;
+                maxMinutes?: number;
+                contentRatings?: Array<string>;
+                /**
+                 * Program studios, or the show network for episodes
+                 */
+                studios?: Array<string>;
+            };
+            query: {
+                /**
+                 * Existing search DSL filter (e.g., 'genre = "Action" AND year > 1980')
+                 */
+                filterString?: string;
+                /**
+                 * Free-text search via Meilisearch
+                 */
+                keywords?: string;
+                /**
+                 * Restrict to specific program types
+                 */
+                programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+            };
+            minPrograms: number;
+        }>;
+        schedule: {
+            type: 'time';
+            flexPreference: 'distribute' | 'end';
+            latenessMs: number;
+            maxDays: number;
+            overflow: {
+                type: 'duration';
+                maxMs: number;
+            } | {
+                type: 'oneExtra';
+            };
+            padMs: number;
+            period: 'day' | 'week';
+            slots: Array<{
+                startTime: number;
+                padMs?: number;
+                overflow?: {
+                    type: 'duration';
+                    maxMs: number;
+                } | {
+                    type: 'oneExtra';
+                };
+                latenessMs?: number;
+                type: 'role';
+                order: 'next' | 'shuffle' | 'ordered_shuffle' | 'alphanumeric' | 'chronological';
+                direction: 'asc' | 'desc';
+                id: string;
+                iterationGroup?: string;
+                linkMode?: 'continue' | 'rerun';
+                rerunOverflow?: 'flex' | 'continue';
+                filler?: Array<{
+                    types: Array<'head' | 'pre' | 'post' | 'tail' | 'fallback' | 'mid'>;
+                    fillerListId: string;
+                    fillerOrder: 'shuffle_prefer_short' | 'shuffle_prefer_long' | 'uniform';
+                }>;
+                midRoll?: {
+                    intervalMs?: number;
+                    breakRule?: {
+                        type: 'fixed_interval';
+                        intervalMs: number;
+                    } | {
+                        type: 'percentage';
+                        points: Array<number>;
+                    } | {
+                        type: 'initial_then_interval';
+                        initialDelayMs: number;
+                        intervalMs: number;
+                    };
+                    maxBreaks: number;
+                    minProgramDurationMs: number;
+                    tailBufferMs: number;
+                    breakDurationMs?: number;
+                    breakDurationMinMs?: number;
+                    breakDurationMaxMs?: number;
+                    programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                    strategy: 'eager' | 'lazy';
+                };
+                /**
+                 * A role from the preset's content requirements
+                 */
+                role: string;
+            }>;
+            timeZoneOffset: number;
+            startTomorrow?: boolean;
+            premieres?: {
+                enabled: boolean;
+                timeOfDayMs: number;
+                maxPerDay: number;
+            };
+            rerunWeighting?: {
+                mode: 'off' | 'least_recent' | 'unwatched';
+                strength: number;
+            };
+        } | {
+            type: 'random';
+            flexPreference: 'distribute' | 'end';
+            maxDays: number;
+            padMs: number;
+            padStyle: 'slot' | 'episode';
+            slots: Array<{
+                id: string;
+                iterationGroup?: string;
+                linkMode?: 'continue' | 'rerun';
+                rerunOverflow?: 'flex' | 'continue';
+                filler?: Array<{
+                    types: Array<'head' | 'pre' | 'post' | 'tail' | 'fallback' | 'mid'>;
+                    fillerListId: string;
+                    fillerOrder: 'shuffle_prefer_short' | 'shuffle_prefer_long' | 'uniform';
+                }>;
+                midRoll?: {
+                    intervalMs?: number;
+                    breakRule?: {
+                        type: 'fixed_interval';
+                        intervalMs: number;
+                    } | {
+                        type: 'percentage';
+                        points: Array<number>;
+                    } | {
+                        type: 'initial_then_interval';
+                        initialDelayMs: number;
+                        intervalMs: number;
+                    };
+                    maxBreaks: number;
+                    minProgramDurationMs: number;
+                    tailBufferMs: number;
+                    breakDurationMs?: number;
+                    breakDurationMinMs?: number;
+                    breakDurationMaxMs?: number;
+                    programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                    strategy: 'eager' | 'lazy';
+                };
+                cooldownMs: number;
+                periodMs?: number;
+                durationSpec: {
+                    durationMs: number;
+                    type: 'fixed';
+                } | {
+                    type: 'dynamic';
+                    programCount: number;
+                };
+                weight: number;
+                index?: number;
+                order: 'next' | 'shuffle' | 'ordered_shuffle' | 'alphanumeric' | 'chronological';
+                direction: 'asc' | 'desc';
+                type: 'role';
+                /**
+                 * A role from the preset's content requirements
+                 */
+                role: string;
+            }>;
+            timeZoneOffset?: number;
+            randomDistribution: 'uniform' | 'weighted' | 'none';
+            periodMs?: number;
+            lockWeights: boolean;
+            premieres?: {
+                enabled: boolean;
+                timeOfDayMs: number;
+                maxPerDay: number;
+            };
+            rerunWeighting?: {
+                mode: 'off' | 'least_recent' | 'unwatched';
+                strength: number;
+            };
+        };
+        /**
+         * Rebuild the schedule each cycle where the server supports it; ignored otherwise
+         */
+        rebuildEachCycle?: boolean;
+    };
+};
+
+export type ExportBlueprintResponse = ExportBlueprintResponses[keyof ExportBlueprintResponses];
+
+export type DeleteBlueprintData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/blueprints/{id}';
+};
+
+export type DeleteBlueprintErrors = {
+    /**
+     * Default Response
+     */
+    400: {
+        message: string;
+    };
+    /**
+     * Default Response
+     */
+    404: {
+        message: string;
+    };
+};
+
+export type DeleteBlueprintError = DeleteBlueprintErrors[keyof DeleteBlueprintErrors];
+
+export type DeleteBlueprintResponses = {
+    /**
+     * Default Response
+     */
+    204: unknown;
+};
+
+export type GetChannelBlueprintData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/channels/{id}/blueprint';
+};
+
+export type GetChannelBlueprintErrors = {
+    /**
+     * Default Response
+     */
+    404: {
+        message: string;
+    };
+    /**
+     * Default Response
+     */
+    422: {
+        message: string;
+    };
+};
+
+export type GetChannelBlueprintError = GetChannelBlueprintErrors[keyof GetChannelBlueprintErrors];
+
+export type GetChannelBlueprintResponses = {
+    /**
+     * Default Response
+     */
+    200: {
+        blueprintVersion: 1;
+        id: string;
+        name: string;
+        description: string;
+        category: 'simple' | 'classic-tv' | 'movie' | 'music' | 'binge' | 'genre' | 'people' | 'decade' | 'network' | 'custom';
+        channel: {
+            /**
+             * Channel name; {name} and {number} are replaced
+             */
+            namePattern?: string;
+            numberHint?: number;
+            /**
+             * Icon URL
+             */
+            icon?: string;
+        };
+        roles: Array<{
+            role: string;
+            label: string;
+            description?: string;
+            rules?: {
+                programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                /**
+                 * Program or show genres
+                 */
+                genres?: Array<string>;
+                yearFrom?: number;
+                yearTo?: number;
+                minMinutes?: number;
+                maxMinutes?: number;
+                contentRatings?: Array<string>;
+                /**
+                 * Program studios, or the show network for episodes
+                 */
+                studios?: Array<string>;
+            };
+            query: {
+                /**
+                 * Existing search DSL filter (e.g., 'genre = "Action" AND year > 1980')
+                 */
+                filterString?: string;
+                /**
+                 * Free-text search via Meilisearch
+                 */
+                keywords?: string;
+                /**
+                 * Restrict to specific program types
+                 */
+                programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+            };
+            minPrograms: number;
+        }>;
+        schedule: {
+            type: 'time';
+            flexPreference: 'distribute' | 'end';
+            latenessMs: number;
+            maxDays: number;
+            overflow: {
+                type: 'duration';
+                maxMs: number;
+            } | {
+                type: 'oneExtra';
+            };
+            padMs: number;
+            period: 'day' | 'week';
+            slots: Array<{
+                startTime: number;
+                padMs?: number;
+                overflow?: {
+                    type: 'duration';
+                    maxMs: number;
+                } | {
+                    type: 'oneExtra';
+                };
+                latenessMs?: number;
+                type: 'role';
+                order: 'next' | 'shuffle' | 'ordered_shuffle' | 'alphanumeric' | 'chronological';
+                direction: 'asc' | 'desc';
+                id: string;
+                iterationGroup?: string;
+                linkMode?: 'continue' | 'rerun';
+                rerunOverflow?: 'flex' | 'continue';
+                filler?: Array<{
+                    types: Array<'head' | 'pre' | 'post' | 'tail' | 'fallback' | 'mid'>;
+                    fillerListId: string;
+                    fillerOrder: 'shuffle_prefer_short' | 'shuffle_prefer_long' | 'uniform';
+                }>;
+                midRoll?: {
+                    intervalMs?: number;
+                    breakRule?: {
+                        type: 'fixed_interval';
+                        intervalMs: number;
+                    } | {
+                        type: 'percentage';
+                        points: Array<number>;
+                    } | {
+                        type: 'initial_then_interval';
+                        initialDelayMs: number;
+                        intervalMs: number;
+                    };
+                    maxBreaks: number;
+                    minProgramDurationMs: number;
+                    tailBufferMs: number;
+                    breakDurationMs?: number;
+                    breakDurationMinMs?: number;
+                    breakDurationMaxMs?: number;
+                    programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                    strategy: 'eager' | 'lazy';
+                };
+                /**
+                 * A role from the preset's content requirements
+                 */
+                role: string;
+            }>;
+            timeZoneOffset: number;
+            startTomorrow?: boolean;
+            premieres?: {
+                enabled: boolean;
+                timeOfDayMs: number;
+                maxPerDay: number;
+            };
+            rerunWeighting?: {
+                mode: 'off' | 'least_recent' | 'unwatched';
+                strength: number;
+            };
+        } | {
+            type: 'random';
+            flexPreference: 'distribute' | 'end';
+            maxDays: number;
+            padMs: number;
+            padStyle: 'slot' | 'episode';
+            slots: Array<{
+                id: string;
+                iterationGroup?: string;
+                linkMode?: 'continue' | 'rerun';
+                rerunOverflow?: 'flex' | 'continue';
+                filler?: Array<{
+                    types: Array<'head' | 'pre' | 'post' | 'tail' | 'fallback' | 'mid'>;
+                    fillerListId: string;
+                    fillerOrder: 'shuffle_prefer_short' | 'shuffle_prefer_long' | 'uniform';
+                }>;
+                midRoll?: {
+                    intervalMs?: number;
+                    breakRule?: {
+                        type: 'fixed_interval';
+                        intervalMs: number;
+                    } | {
+                        type: 'percentage';
+                        points: Array<number>;
+                    } | {
+                        type: 'initial_then_interval';
+                        initialDelayMs: number;
+                        intervalMs: number;
+                    };
+                    maxBreaks: number;
+                    minProgramDurationMs: number;
+                    tailBufferMs: number;
+                    breakDurationMs?: number;
+                    breakDurationMinMs?: number;
+                    breakDurationMaxMs?: number;
+                    programTypes?: Array<'movie' | 'episode' | 'track' | 'music_video' | 'other_video'>;
+                    strategy: 'eager' | 'lazy';
+                };
+                cooldownMs: number;
+                periodMs?: number;
+                durationSpec: {
+                    durationMs: number;
+                    type: 'fixed';
+                } | {
+                    type: 'dynamic';
+                    programCount: number;
+                };
+                weight: number;
+                index?: number;
+                order: 'next' | 'shuffle' | 'ordered_shuffle' | 'alphanumeric' | 'chronological';
+                direction: 'asc' | 'desc';
+                type: 'role';
+                /**
+                 * A role from the preset's content requirements
+                 */
+                role: string;
+            }>;
+            timeZoneOffset?: number;
+            randomDistribution: 'uniform' | 'weighted' | 'none';
+            periodMs?: number;
+            lockWeights: boolean;
+            premieres?: {
+                enabled: boolean;
+                timeOfDayMs: number;
+                maxPerDay: number;
+            };
+            rerunWeighting?: {
+                mode: 'off' | 'least_recent' | 'unwatched';
+                strength: number;
+            };
+        };
+        /**
+         * Rebuild the schedule each cycle where the server supports it; ignored otherwise
+         */
+        rebuildEachCycle?: boolean;
+    };
+};
+
+export type GetChannelBlueprintResponse = GetChannelBlueprintResponses[keyof GetChannelBlueprintResponses];
+
 export type GetApiVersionData = {
     body?: never;
     path?: never;

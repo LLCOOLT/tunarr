@@ -30,6 +30,7 @@ import {
   parseChannelNumbersParam,
 } from '../services/M3UService.js';
 import { AutoChannelApiController } from './autoChannelApi.ts';
+import { BlueprintsApiController } from './blueprintsApi.ts';
 import { channelsApi } from './channelsApi.js';
 import { CreditsApiController } from './creditsApi.ts';
 import { customShowsApiV2 } from './customShowsApi.js';
@@ -100,7 +101,8 @@ export const apiRouter: RouterPluginAsyncCallback = async (fastify) => {
     .register(container.get(EtvNextApiController).mount)
     .register(container.get(CreditsApiController).mount)
     .register(container.get(ProgramGroupingApiController).mount)
-    .register(container.get(AutoChannelApiController).mount);
+    .register(container.get(AutoChannelApiController).mount)
+    .register(container.get(BlueprintsApiController).mount);
 
   if (isDev || getBooleanEnvVar(TUNARR_ENV_VARS.MOUNT_DEBUG_ENDPOINTS, false)) {
     await fastify.register(debugApi);

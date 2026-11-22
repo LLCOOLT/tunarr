@@ -26,6 +26,11 @@ msgstr " the following day."
 msgid "\"{0}\" Live"
 msgstr "\"{0}\" Live"
 
+#. placeholder {0}: emptyRole.label
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "“{0}” matches nothing in this scope, so the channel cannot be created."
+msgstr "“{0}” matches nothing in this scope, so the channel cannot be created."
+
 #. placeholder {0}: channel.name
 #: src/components/channels/ChannelSessionsDialog.tsx
 msgid "\"{0}\" Sessions"
@@ -440,6 +445,10 @@ msgstr "A smart collection saves a library search. It picks up new items that ma
 #: src/components/channel_config/ChannelTranscodingConfig.tsx
 msgid "A stream selection profile chooses the audio and subtitle streams for programs on this channel. Filler lists and playlists can assign their own profile, which takes precedence."
 msgstr "A stream selection profile chooses the audio and subtitle streams for programs on this channel. Filler lists and playlists can assign their own profile, which takes precedence."
+
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "A whole number from 1"
+msgstr "A whole number from 1"
 
 #: src/components/channel_config/ChannelProgrammingSort.tsx
 #: src/components/custom-shows/CustomShowSortToolsMenu.tsx
@@ -1035,6 +1044,14 @@ msgstr "Block"
 msgid "Block Shuffle"
 msgstr "Block Shuffle"
 
+#: src/pages/channels/BlueprintsPage.tsx
+msgid "Blueprint file"
+msgstr "Blueprint file"
+
+#: src/components/channels/ChannelsView.tsx
+msgid "Blueprints"
+msgstr "Blueprints"
+
 #: src/components/slot_scheduler/MidRollConfigPanel.tsx
 msgid "Break Duration"
 msgstr "Break Duration"
@@ -1071,6 +1088,8 @@ msgstr "Builds a new cycle from this schedule before the current one ends, inste
 msgid "Builds a new cycle from this schedule before the current one ends, instead of looping the same programs. Shuffled slots get a new order every cycle and ordered shows continue where they left off. A cycle is one schedule period, so Days to Precalculate is not used."
 msgstr "Builds a new cycle from this schedule before the current one ends, instead of looping the same programs. Shuffled slots get a new order every cycle and ordered shows continue where they left off. A cycle is one schedule period, so Days to Precalculate is not used."
 
+#: src/components/blueprints/BlueprintCard.tsx
+#: src/pages/channels/BlueprintsPage.tsx
 #: src/pages/system/TroubleshootPage.tsx
 msgid "Built-in"
 msgstr "Built-in"
@@ -1115,6 +1134,7 @@ msgstr "Calculates a schedule where all programs end at the same time, creating 
 msgid "Calculating Slots..."
 msgstr "Calculating Slots..."
 
+#: src/components/blueprints/BlueprintCreateDialog.tsx
 #: src/components/channels/BulkAssignFillersDialog.tsx
 #: src/components/channels/BulkAssignFillersDialog.tsx
 #: src/components/channels/ChannelDeleteDialog.tsx
@@ -1209,6 +1229,10 @@ msgstr "Channel (optional)"
 msgid "Channel #{0}"
 msgstr "Channel #{0}"
 
+#: src/pages/channels/BlueprintsPage.tsx
+msgid "Channel Blueprints"
+msgstr "Channel Blueprints"
+
 #: src/components/channel_config/ChannelFlexConfig.tsx
 msgid "Channel Fallback"
 msgstr "Channel Fallback"
@@ -1222,6 +1246,10 @@ msgstr "Channel Group"
 msgid "Channel group is required"
 msgstr "Channel group is required"
 
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "Channel name"
+msgstr "Channel name"
+
 #: src/components/channel_config/ChannelPropertiesEditor.tsx
 msgid "Channel Name"
 msgstr "Channel Name"
@@ -1230,6 +1258,10 @@ msgstr "Channel Name"
 #: src/components/channel_config/ChannelPropertiesEditor.tsx
 msgid "Channel name is required"
 msgstr "Channel name is required"
+
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "Channel number"
+msgstr "Channel number"
 
 #: src/components/channel_config/ChannelPropertiesEditor.tsx
 msgid "Channel Number"
@@ -1258,6 +1290,7 @@ msgstr "Channel Transcode Config"
 #: src/components/shell/CommandPaletteContainer.tsx
 #: src/components/shell/useShellNav.tsx
 #: src/hooks/useRouteName.ts
+#: src/pages/channels/BlueprintsPage.tsx
 #: src/pages/system/TroubleshootPage.tsx
 msgid "Channels"
 msgstr "Channels"
@@ -1580,6 +1613,11 @@ msgstr "Create a channel"
 msgid "Create a Channel"
 msgstr "Create a Channel"
 
+#. placeholder {0}: blueprint.name
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "Create a channel from {0}"
+msgstr "Create a channel from {0}"
+
 #: src/components/fillers/FillerListsView.tsx
 msgid "Create a Filler List"
 msgstr "Create a Filler List"
@@ -1591,6 +1629,10 @@ msgstr "Create a new profile"
 #: src/components/custom-shows/CustomShowsView.tsx
 msgid "Create a Playlist"
 msgstr "Create a Playlist"
+
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "Create Channel"
+msgstr "Create Channel"
 
 #: src/pages/profiles/StreamSelectionProfilePage.tsx
 msgid "Create Profile"
@@ -1726,6 +1768,7 @@ msgstr "Default only"
 msgid "Default profile"
 msgstr "Default profile"
 
+#: src/components/blueprints/BlueprintCard.tsx
 #: src/components/channel_config/ChannelProgrammingDeleteOptions.tsx
 #: src/components/channels/ChannelDeleteDialog.tsx
 #: src/components/channels/ChannelsDeleteDialog.tsx
@@ -1756,9 +1799,10 @@ msgstr "Delete"
 msgid "Delete \"{0}\""
 msgstr "Delete \"{0}\""
 
+#. placeholder {0}: blueprint.name
 #. placeholder {0}: collection.name
 #. placeholder {0}: filler.name
-#. placeholder {0}: show.name
+#: src/components/blueprints/BlueprintCard.tsx
 #: src/components/custom-shows/CustomShowCard.tsx
 #: src/components/fillers/FillerListCard.tsx
 #: src/components/smart_collections/SmartCollectionCard.tsx
@@ -2418,6 +2462,19 @@ msgstr "Experimental Features"
 msgid "Experimental: Make perfect schedule loop"
 msgstr "Experimental: Make perfect schedule loop"
 
+#. placeholder {0}: blueprint.name
+#: src/components/blueprints/BlueprintCard.tsx
+msgid "Export {0}"
+msgstr "Export {0}"
+
+#: src/components/blueprints/BlueprintCard.tsx
+msgid "Export as a file"
+msgstr "Export as a file"
+
+#: src/components/channels/ChannelOptionsMenu.tsx
+msgid "Export as Blueprint"
+msgstr "Export as Blueprint"
+
 #: src/components/channels/ChannelsView.tsx
 #: src/components/channels/ChannelsView.tsx
 msgid "Export M3U"
@@ -2960,6 +3017,15 @@ msgstr "Image"
 #: src/components/channel_config/ChannelFlexConfig.tsx
 msgid "Image URL"
 msgstr "Image URL"
+
+#: src/pages/channels/BlueprintsPage.tsx
+msgid "Import Blueprint"
+msgstr "Import Blueprint"
+
+#. placeholder {0}: saved.blueprint.name
+#: src/pages/channels/BlueprintsPage.tsx
+msgid "Imported “{0}”"
+msgstr "Imported “{0}”"
 
 #: src/components/programming_controls/AddBlockShuffleModal.tsx
 msgid "In Order"
@@ -3644,6 +3710,10 @@ msgstr "New Transcode Config"
 #: src/pages/welcome/WelcomePage.tsx
 #~ msgid "Next"
 #~ msgstr "Next"
+
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "Next free"
+msgstr "Next free"
 
 #: src/pages/settings/TaskSettingsPage.tsx
 msgid "Next run"
@@ -4340,6 +4410,10 @@ msgstr "Random (by show)"
 msgid "Random Episode"
 msgstr "Random Episode"
 
+#: src/components/blueprints/BlueprintCard.tsx
+msgid "Random slots"
+msgstr "Random slots"
+
 #: src/components/channel_config/ChannelProgrammingSort.tsx
 msgid "Random..."
 msgstr "Random..."
@@ -4359,6 +4433,10 @@ msgstr "Read Less"
 #: src/components/programs/MediaDetailCard.tsx
 msgid "Read More"
 msgstr "Read More"
+
+#: src/pages/channels/BlueprintsPage.tsx
+msgid "Ready-made channel recipes. A blueprint names rules, not programs, so it fits any library. Pick one, check what it matches, and create the channel."
+msgstr "Ready-made channel recipes. A blueprint names rules, not programs, so it fits any library. Pick one, check what it matches, and create the channel."
 
 #: src/components/slot_scheduler/RebuildEachCycleControl.tsx
 msgid "Rebuild each cycle"
@@ -4742,6 +4820,10 @@ msgstr "Sample rate cannot be changed when copying input audio"
 msgid "Save"
 msgstr "Save"
 
+#: src/components/channels/ChannelOptionsMenu.tsx
+msgid "Save as Blueprint"
+msgstr "Save as Blueprint"
+
 #: src/components/smart_collections/CreateSmartCollectionDialog.tsx
 msgid "Save as new collection…"
 msgstr "Save as new collection…"
@@ -4753,6 +4835,11 @@ msgstr "Save as Smart Collection"
 #: src/components/smart_collections/CreateSmartCollectionDialog.tsx
 msgid "Save Smart Collection"
 msgstr "Save Smart Collection"
+
+#. placeholder {0}: row.name
+#: src/components/channels/ChannelOptionsMenu.tsx
+msgid "Saved “{0}” as a blueprint"
+msgstr "Saved “{0}” as a blueprint"
 
 #: src/components/settings/ffmpeg/TranscodeConfigSettingsForm.tsx
 msgid "Saving..."
@@ -5482,6 +5569,18 @@ msgstr "Test Playback"
 msgid "Test Transcode"
 msgstr "Test Transcode"
 
+#: src/pages/channels/BlueprintsPage.tsx
+msgid "The blueprint could not be imported"
+msgstr "The blueprint could not be imported"
+
+#: src/pages/channels/BlueprintsPage.tsx
+msgid "The blueprints could not be loaded"
+msgstr "The blueprints could not be loaded"
+
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "The channel could not be created"
+msgstr "The channel could not be created"
+
 #: src/components/programming_controls/AddRestrictHoursModal.tsx
 msgid "The channel's regular programming between the specified hours. Flex time will fill up the remaining hours."
 msgstr "The channel's regular programming between the specified hours. Flex time will fill up the remaining hours."
@@ -5509,6 +5608,10 @@ msgstr "The loaded version of the Tunarr UI does not match the server. Reload th
 #: src/components/UnavailableLibraryIndicator.tsx
 msgid "The media server stopped reporting this library on {since}. Its programs and channel schedules are preserved. Tunarr will not scan it until the server reports it again."
 msgstr "The media server stopped reporting this library on {since}. Its programs and channel schedules are preserved. Tunarr will not scan it until the server reports it again."
+
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "The preview could not be loaded"
+msgstr "The preview could not be loaded"
 
 #: src/components/profiles/StreamSelectionPreviewPanel.tsx
 #~ msgid "The rules changed since this test ran. Run it again."
@@ -5575,6 +5678,10 @@ msgstr "This allows to schedule specific shows to run at specific time slots of 
 #: src/components/programming_controls/AdjustWeightsModal.tsx
 msgid "This allows you to pick the weights for each of the shows, so you can decide that some shows should be less frequent than other shows."
 msgstr "This allows you to pick the weights for each of the shows, so you can decide that some shows should be less frequent than other shows."
+
+#: src/components/channels/ChannelOptionsMenu.tsx
+msgid "This channel cannot be saved as a blueprint"
+msgstr "This channel cannot be saved as a blueprint"
 
 #: src/pages/channels/RandomSlotEditorPage.tsx
 msgid "This channel has an existing time slot schedule. A channel can only use one scheduling type at a time. Saving a schedule here will remove the existing time slot schedule."
@@ -5740,6 +5847,10 @@ msgstr "Time Limit"
 #: src/hooks/useRouteName.ts
 msgid "Time Slot Editor"
 msgstr "Time Slot Editor"
+
+#: src/components/blueprints/BlueprintCard.tsx
+msgid "Time slots"
+msgstr "Time slots"
 
 #: src/pages/channels/TimeSlotEditorPage.tsx
 msgid "Time Slots"
@@ -6034,6 +6145,11 @@ msgstr "Use schedule default"
 #: src/pages/settings/XmlTvSettingsPage.tsx
 msgid "Use Show Poster"
 msgstr "Use Show Poster"
+
+#. placeholder {0}: blueprint.name
+#: src/components/blueprints/BlueprintCard.tsx
+msgid "Use the {0} blueprint"
+msgstr "Use the {0} blueprint"
 
 #: src/components/channel_config/ChannelTranscodingConfig.tsx
 msgid "Use these settings to override global ffmpeg settings for this channel."
@@ -6330,6 +6446,10 @@ msgstr "You must create at least one <0>filler list</0> before assigning filler 
 #: src/pages/welcome/WelcomePage.tsx
 #~ msgid "You're All Set!"
 #~ msgstr "You're All Set!"
+
+#: src/pages/channels/BlueprintsPage.tsx
+msgid "Your blueprints"
+msgstr "Your blueprints"
 
 #. placeholder {0}: field.value
 #: src/components/programming_controls/AddReplicateModal.tsx

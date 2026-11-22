@@ -547,6 +547,28 @@ describe('parsedSearchToRequest', () => {
         },
       } satisfies SearchFilter);
     });
+
+    test('parse show_rating', () => {
+      const input = 'show_rating in ["TV-Y", "TV-Y7"]';
+      const query = parseAndCheckExpression(input);
+      expect(query).toMatchObject({
+        type: 'single_query',
+        field: 'show_rating',
+        op: 'in',
+        value: ['TV-Y', 'TV-Y7'],
+      } satisfies SearchClause);
+      const request = parsedSearchToRequest(query);
+      expect(request).toMatchObject({
+        type: 'value',
+        fieldSpec: {
+          key: 'grandparent.rating',
+          name: 'show_rating',
+          op: 'in',
+          type: 'faceted_string',
+          value: ['TV-Y', 'TV-Y7'],
+        },
+      } satisfies SearchFilter);
+    });
   });
 
   test('handles audio_language mapping', () => {

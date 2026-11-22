@@ -26,6 +26,11 @@ msgstr "次日。"
 msgid "\"{0}\" Live"
 msgstr "「{0}」直播中"
 
+#. placeholder {0}: emptyRole.label
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "“{0}” matches nothing in this scope, so the channel cannot be created."
+msgstr ""
+
 #. placeholder {0}: channel.name
 #: src/components/channels/ChannelSessionsDialog.tsx
 msgid "\"{0}\" Sessions"
@@ -439,6 +444,10 @@ msgstr ""
 
 #: src/components/channel_config/ChannelTranscodingConfig.tsx
 msgid "A stream selection profile chooses the audio and subtitle streams for programs on this channel. Filler lists and playlists can assign their own profile, which takes precedence."
+msgstr ""
+
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "A whole number from 1"
 msgstr ""
 
 #: src/components/channel_config/ChannelProgrammingSort.tsx
@@ -1035,6 +1044,14 @@ msgstr "块"
 msgid "Block Shuffle"
 msgstr "分块随机"
 
+#: src/pages/channels/BlueprintsPage.tsx
+msgid "Blueprint file"
+msgstr ""
+
+#: src/components/channels/ChannelsView.tsx
+msgid "Blueprints"
+msgstr ""
+
 #: src/components/slot_scheduler/MidRollConfigPanel.tsx
 msgid "Break Duration"
 msgstr "广告时长"
@@ -1071,6 +1088,8 @@ msgstr ""
 msgid "Builds a new cycle from this schedule before the current one ends, instead of looping the same programs. Shuffled slots get a new order every cycle and ordered shows continue where they left off. A cycle is one schedule period, so Days to Precalculate is not used."
 msgstr ""
 
+#: src/components/blueprints/BlueprintCard.tsx
+#: src/pages/channels/BlueprintsPage.tsx
 #: src/pages/system/TroubleshootPage.tsx
 msgid "Built-in"
 msgstr ""
@@ -1115,6 +1134,7 @@ msgstr "计算一种所有节目同时结束的排期，从而形成完美循环
 msgid "Calculating Slots..."
 msgstr "正在计算时段…"
 
+#: src/components/blueprints/BlueprintCreateDialog.tsx
 #: src/components/channels/BulkAssignFillersDialog.tsx
 #: src/components/channels/BulkAssignFillersDialog.tsx
 #: src/components/channels/ChannelDeleteDialog.tsx
@@ -1209,6 +1229,10 @@ msgstr ""
 msgid "Channel #{0}"
 msgstr "频道 #{0}"
 
+#: src/pages/channels/BlueprintsPage.tsx
+msgid "Channel Blueprints"
+msgstr ""
+
 #: src/components/channel_config/ChannelFlexConfig.tsx
 msgid "Channel Fallback"
 msgstr "频道兜底"
@@ -1222,6 +1246,10 @@ msgstr "频道分组"
 msgid "Channel group is required"
 msgstr "必须填写频道分组"
 
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "Channel name"
+msgstr ""
+
 #: src/components/channel_config/ChannelPropertiesEditor.tsx
 msgid "Channel Name"
 msgstr "频道名称"
@@ -1230,6 +1258,10 @@ msgstr "频道名称"
 #: src/components/channel_config/ChannelPropertiesEditor.tsx
 msgid "Channel name is required"
 msgstr "必须填写频道名称"
+
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "Channel number"
+msgstr ""
 
 #: src/components/channel_config/ChannelPropertiesEditor.tsx
 msgid "Channel Number"
@@ -1258,6 +1290,7 @@ msgstr "频道转码配置"
 #: src/components/shell/CommandPaletteContainer.tsx
 #: src/components/shell/useShellNav.tsx
 #: src/hooks/useRouteName.ts
+#: src/pages/channels/BlueprintsPage.tsx
 #: src/pages/system/TroubleshootPage.tsx
 msgid "Channels"
 msgstr "频道"
@@ -1580,6 +1613,11 @@ msgstr ""
 msgid "Create a Channel"
 msgstr "创建频道"
 
+#. placeholder {0}: blueprint.name
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "Create a channel from {0}"
+msgstr ""
+
 #: src/components/fillers/FillerListsView.tsx
 msgid "Create a Filler List"
 msgstr ""
@@ -1590,6 +1628,10 @@ msgstr ""
 
 #: src/components/custom-shows/CustomShowsView.tsx
 msgid "Create a Playlist"
+msgstr ""
+
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "Create Channel"
 msgstr ""
 
 #: src/pages/profiles/StreamSelectionProfilePage.tsx
@@ -1726,6 +1768,7 @@ msgstr ""
 msgid "Default profile"
 msgstr ""
 
+#: src/components/blueprints/BlueprintCard.tsx
 #: src/components/channel_config/ChannelProgrammingDeleteOptions.tsx
 #: src/components/channels/ChannelDeleteDialog.tsx
 #: src/components/channels/ChannelsDeleteDialog.tsx
@@ -1756,9 +1799,10 @@ msgstr "删除"
 msgid "Delete \"{0}\""
 msgstr "删除「{0}」"
 
+#. placeholder {0}: blueprint.name
 #. placeholder {0}: collection.name
 #. placeholder {0}: filler.name
-#. placeholder {0}: show.name
+#: src/components/blueprints/BlueprintCard.tsx
 #: src/components/custom-shows/CustomShowCard.tsx
 #: src/components/fillers/FillerListCard.tsx
 #: src/components/smart_collections/SmartCollectionCard.tsx
@@ -2418,6 +2462,19 @@ msgstr "实验性功能"
 msgid "Experimental: Make perfect schedule loop"
 msgstr "实验性：生成完美循环排期"
 
+#. placeholder {0}: blueprint.name
+#: src/components/blueprints/BlueprintCard.tsx
+msgid "Export {0}"
+msgstr ""
+
+#: src/components/blueprints/BlueprintCard.tsx
+msgid "Export as a file"
+msgstr ""
+
+#: src/components/channels/ChannelOptionsMenu.tsx
+msgid "Export as Blueprint"
+msgstr ""
+
 #: src/components/channels/ChannelsView.tsx
 #: src/components/channels/ChannelsView.tsx
 msgid "Export M3U"
@@ -2960,6 +3017,15 @@ msgstr "图片"
 #: src/components/channel_config/ChannelFlexConfig.tsx
 msgid "Image URL"
 msgstr "图片链接"
+
+#: src/pages/channels/BlueprintsPage.tsx
+msgid "Import Blueprint"
+msgstr ""
+
+#. placeholder {0}: saved.blueprint.name
+#: src/pages/channels/BlueprintsPage.tsx
+msgid "Imported “{0}”"
+msgstr ""
 
 #: src/components/programming_controls/AddBlockShuffleModal.tsx
 msgid "In Order"
@@ -3644,6 +3710,10 @@ msgstr ""
 #: src/pages/welcome/WelcomePage.tsx
 #~ msgid "Next"
 #~ msgstr "下一步"
+
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "Next free"
+msgstr ""
 
 #: src/pages/settings/TaskSettingsPage.tsx
 msgid "Next run"
@@ -4340,6 +4410,10 @@ msgstr "随机（按剧集）"
 msgid "Random Episode"
 msgstr ""
 
+#: src/components/blueprints/BlueprintCard.tsx
+msgid "Random slots"
+msgstr ""
+
 #: src/components/channel_config/ChannelProgrammingSort.tsx
 msgid "Random..."
 msgstr "随机…"
@@ -4359,6 +4433,10 @@ msgstr "收起"
 #: src/components/programs/MediaDetailCard.tsx
 msgid "Read More"
 msgstr "展开阅读"
+
+#: src/pages/channels/BlueprintsPage.tsx
+msgid "Ready-made channel recipes. A blueprint names rules, not programs, so it fits any library. Pick one, check what it matches, and create the channel."
+msgstr ""
 
 #: src/components/slot_scheduler/RebuildEachCycleControl.tsx
 msgid "Rebuild each cycle"
@@ -4742,6 +4820,10 @@ msgstr "复制输入音频时无法修改采样率"
 msgid "Save"
 msgstr "保存"
 
+#: src/components/channels/ChannelOptionsMenu.tsx
+msgid "Save as Blueprint"
+msgstr ""
+
 #: src/components/smart_collections/CreateSmartCollectionDialog.tsx
 msgid "Save as new collection…"
 msgstr "另存为新合集…"
@@ -4753,6 +4835,11 @@ msgstr "另存为智能合集"
 #: src/components/smart_collections/CreateSmartCollectionDialog.tsx
 msgid "Save Smart Collection"
 msgstr "保存智能合集"
+
+#. placeholder {0}: row.name
+#: src/components/channels/ChannelOptionsMenu.tsx
+msgid "Saved “{0}” as a blueprint"
+msgstr ""
 
 #: src/components/settings/ffmpeg/TranscodeConfigSettingsForm.tsx
 msgid "Saving..."
@@ -5482,6 +5569,18 @@ msgstr "测试播放"
 msgid "Test Transcode"
 msgstr "测试转码"
 
+#: src/pages/channels/BlueprintsPage.tsx
+msgid "The blueprint could not be imported"
+msgstr ""
+
+#: src/pages/channels/BlueprintsPage.tsx
+msgid "The blueprints could not be loaded"
+msgstr ""
+
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "The channel could not be created"
+msgstr ""
+
 #: src/components/programming_controls/AddRestrictHoursModal.tsx
 msgid "The channel's regular programming between the specified hours. Flex time will fill up the remaining hours."
 msgstr "频道在指定时段内的常规节目安排，其余时间由弹性时间填充。"
@@ -5508,6 +5607,10 @@ msgstr "当前加载的 Tunarr 界面版本与服务器不匹配。请刷新浏�
 
 #: src/components/UnavailableLibraryIndicator.tsx
 msgid "The media server stopped reporting this library on {since}. Its programs and channel schedules are preserved. Tunarr will not scan it until the server reports it again."
+msgstr ""
+
+#: src/components/blueprints/BlueprintCreateDialog.tsx
+msgid "The preview could not be loaded"
 msgstr ""
 
 #: src/components/profiles/StreamSelectionPreviewPanel.tsx
@@ -5575,6 +5678,10 @@ msgstr "此功能可将特定剧集安排在一天或一周中的特定时段播
 #: src/components/programming_controls/AdjustWeightsModal.tsx
 msgid "This allows you to pick the weights for each of the shows, so you can decide that some shows should be less frequent than other shows."
 msgstr "此功能可让你为每部剧设置权重，从而让某些剧集的播出频率低于其他剧集。"
+
+#: src/components/channels/ChannelOptionsMenu.tsx
+msgid "This channel cannot be saved as a blueprint"
+msgstr ""
 
 #: src/pages/channels/RandomSlotEditorPage.tsx
 msgid "This channel has an existing time slot schedule. A channel can only use one scheduling type at a time. Saving a schedule here will remove the existing time slot schedule."
@@ -5740,6 +5847,10 @@ msgstr ""
 #: src/hooks/useRouteName.ts
 msgid "Time Slot Editor"
 msgstr "时段编辑器"
+
+#: src/components/blueprints/BlueprintCard.tsx
+msgid "Time slots"
+msgstr ""
 
 #: src/pages/channels/TimeSlotEditorPage.tsx
 msgid "Time Slots"
@@ -6034,6 +6145,11 @@ msgstr "使用排期默认值"
 #: src/pages/settings/XmlTvSettingsPage.tsx
 msgid "Use Show Poster"
 msgstr "使用剧集海报"
+
+#. placeholder {0}: blueprint.name
+#: src/components/blueprints/BlueprintCard.tsx
+msgid "Use the {0} blueprint"
+msgstr ""
 
 #: src/components/channel_config/ChannelTranscodingConfig.tsx
 msgid "Use these settings to override global ffmpeg settings for this channel."
@@ -6330,6 +6446,10 @@ msgstr "你必须先创建至少一个<0>垫片列表</0>，才能为时段分�
 #: src/pages/welcome/WelcomePage.tsx
 #~ msgid "You're All Set!"
 #~ msgstr "一切就绪！"
+
+#: src/pages/channels/BlueprintsPage.tsx
+msgid "Your blueprints"
+msgstr ""
 
 #. placeholder {0}: field.value
 #: src/components/programming_controls/AddReplicateModal.tsx

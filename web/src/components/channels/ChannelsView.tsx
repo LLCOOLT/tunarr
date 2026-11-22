@@ -3,6 +3,7 @@ import { useThemeTokens } from '@/hooks/useTunarrTheme.ts';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import {
   Add,
+  Architecture,
   AutoFixHigh,
   ContentCopy,
   Delete,
@@ -398,6 +399,13 @@ export const ChannelsView = ({
               startIcon={<AutoFixHigh />}
             >
               <Trans>Auto Create</Trans>
+            </RouterButtonLink>
+            <RouterButtonLink
+              to="/channels/blueprints"
+              variant="outlined"
+              startIcon={<Architecture />}
+            >
+              <Trans>Blueprints</Trans>
             </RouterButtonLink>
             <RouterButtonLink
               to="/channels/new"

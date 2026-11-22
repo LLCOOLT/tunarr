@@ -1,30 +1,6 @@
-import {
-  Business,
-  CalendarMonth,
-  Category,
-  LiveTv,
-  Movie,
-  MusicNote,
-  Person,
-  PlaylistPlay,
-  Shuffle,
-  Tune,
-} from '@mui/icons-material';
 import { Card, CardActionArea, CardContent, Typography } from '@mui/material';
-import type { ChannelPreset, ChannelPresetCategory } from '@tunarr/types/api';
-
-const categoryIcons: Record<ChannelPresetCategory, React.ReactNode> = {
-  simple: <Shuffle />,
-  'classic-tv': <LiveTv />,
-  movie: <Movie />,
-  music: <MusicNote />,
-  binge: <PlaylistPlay />,
-  genre: <Category />,
-  people: <Person />,
-  decade: <CalendarMonth />,
-  network: <Business />,
-  custom: <Tune />,
-};
+import type { ChannelPreset } from '@tunarr/types/api';
+import { categoryIcons } from './categoryIcons.tsx';
 
 type PresetCardProps = {
   preset: ChannelPreset;

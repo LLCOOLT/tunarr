@@ -76,6 +76,7 @@ nav:
           - configure/channels/index.md
           - Properties: configure/channels/properties.md
           - Auto Create: configure/channels/auto-create.md
+          - Blueprints: configure/channels/blueprints.md
           - Flex: configure/channels/flex.md
           - EPG: configure/channels/epg.md
           - Transcoding: configure/channels/transcoding.md
