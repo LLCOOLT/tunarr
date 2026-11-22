@@ -5,6 +5,7 @@ import type {
   NativePlaybackFlexItemSchema,
   NativePlaybackItemSchema,
   NativePlaybackResponseSchema,
+  NativePlaybackSourceSchema,
 } from './schemas/nativePlaybackSchemas.js';
 
 export type NativePlaybackContentItem = z.infer<
@@ -20,3 +21,4 @@ export type NativePlaybackItem = z.infer<typeof NativePlaybackItemSchema>;
 export type NativePlaybackResponse = z.infer<
   typeof NativePlaybackResponseSchema
 >;
+export type NativePlaybackSource = z.infer<typeof NativePlaybackSourceSchema>;

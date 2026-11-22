@@ -204,4 +204,60 @@ describe('mapLineupItemToPlaybackItem', () => {
 
     expect(result.type).toBe('flex');
   });
+
+  test('content item carries the program duration', () => {
+    const item = makeProgramItem({ duration: 42 * 60 * 1000 });
+
+    const result = mapLineupItemToPlaybackItem(item, baseUrl, channelId);
+
+    expect(result.type).toBe('content');
+    if (result.type === 'content') {
+      expect(result.durationMs).toBe(42 * 60 * 1000);
+    }
+  });
+
+  test('Plex content item names its server and rating key', () => {
+    const item = makeProgramItem({ sourceType: 'plex', externalKey: '12345' });
+
+    const result = mapLineupItemToPlaybackItem(
+      item,
+      baseUrl,
+      channelId,
+      'abc-machine-id',
+    );
+
+    expect(result.type).toBe('content');
+    if (result.type === 'content') {
+      expect(result.source).toEqual({
+        type: 'plex',
+        mediaSourceId: item.program.mediaSourceId,
+        mediaSourceName: item.program.externalSourceId,
+        serverIdentifier: 'abc-machine-id',
+        externalKey: '12345',
+      });
+    }
+  });
+
+  test('source leaves out an unknown server identifier', () => {
+    const item = makeProgramItem({ sourceType: 'jellyfin' });
+
+    const result = mapLineupItemToPlaybackItem(item, baseUrl, channelId, null);
+
+    expect(result.type).toBe('content');
+    if (result.type === 'content') {
+      expect(result.source?.type).toBe('jellyfin');
+      expect(result.source?.serverIdentifier).toBeUndefined();
+    }
+  });
+
+  test('local file has no source', () => {
+    const item = makeProgramItem({ sourceType: 'local' });
+
+    const result = mapLineupItemToPlaybackItem(item, baseUrl, channelId, 'x');
+
+    expect(result.type).toBe('content');
+    if (result.type === 'content') {
+      expect(result.source).toBeUndefined();
+    }
+  });
 });

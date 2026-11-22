@@ -1,11 +1,15 @@
 import type { RouterPluginAsyncCallback } from '@/types/serverType.js';
 import { LoggerFactory } from '@/util/logging/LoggerFactory.js';
-import type { NativePlaybackItem } from '@tunarr/types';
+import type { NativePlaybackItem, NativePlaybackSource } from '@tunarr/types';
 import { BasicIdParamSchema } from '@tunarr/types/api';
 import { NativePlaybackResponseSchema } from '@tunarr/types/schemas';
 import { isNil } from 'lodash-es';
+import { isNonEmptyString } from '../util/index.ts';
 import z from 'zod/v4';
-import type { StreamLineupItem } from '../db/derived_types/StreamLineup.ts';
+import type {
+  StreamLineupItem,
+  StreamLineupProgram,
+} from '../db/derived_types/StreamLineup.ts';
 import {
   isContentBackedLineupItem,
   isOfflineLineupItem,
@@ -19,10 +23,42 @@ function buildStreamUrl(
   return `${baseUrl}/stream/channels/${channelId}/item-stream.ts?t=${itemStartedAtMs}`;
 }
 
+/**
+ * Where a program's original file lives, for a client that plays it from the
+ * media server directly. `serverIdentifier` is the media source's stored client
+ * identifier (Plex machineIdentifier), when known. Local files have no remote
+ * key, so they get none.
+ */
+export function playbackSourceForProgram(
+  program: StreamLineupProgram,
+  serverIdentifier: string | null | undefined,
+): NativePlaybackSource | undefined {
+  if (!isNonEmptyString(program.externalKey)) {
+    return;
+  }
+  switch (program.sourceType) {
+    case 'plex':
+    case 'jellyfin':
+    case 'emby':
+      return {
+        type: program.sourceType,
+        mediaSourceId: program.mediaSourceId,
+        mediaSourceName: program.externalSourceId,
+        serverIdentifier: isNonEmptyString(serverIdentifier)
+          ? serverIdentifier
+          : undefined,
+        externalKey: program.externalKey,
+      };
+    case 'local':
+      return;
+  }
+}
+
 export function mapLineupItemToPlaybackItem(
   lineupItem: StreamLineupItem,
   baseUrl: string,
   channelId: string,
+  serverIdentifier?: string | null,
 ): NativePlaybackItem {
   const remainingMs = lineupItem.streamDuration;
   const itemStartedAtMs = lineupItem.programBeginMs;
@@ -52,6 +88,8 @@ export function mapLineupItemToPlaybackItem(
       summary: program.summary ?? undefined,
       thumb: program.icon ?? undefined,
       streamUrl: buildStreamUrl(baseUrl, channelId, itemStartedAtMs),
+      durationMs: program.duration,
+      source: playbackSourceForProgram(program, serverIdentifier),
     };
   }
 
@@ -134,19 +172,39 @@ export const nativePlaybackApi: RouterPluginAsyncCallback = async (fastify) => {
         });
       }
 
+      const serverIdentifiers = new Map<string, string | null>();
+      const serverIdentifierFor = async (lineupItem: StreamLineupItem) => {
+        if (!isContentBackedLineupItem(lineupItem)) {
+          return null;
+        }
+        const id = lineupItem.program.mediaSourceId;
+        const known = serverIdentifiers.get(id);
+        if (known !== undefined) {
+          return known;
+        }
+        const source = await req.serverCtx.mediaSourceDB.getById(id);
+        const found = source?.clientIdentifier ?? null;
+        serverIdentifiers.set(id, found);
+        return found;
+      };
+
       const currentLineupItem = currentResult.get().lineupItem;
       const current = mapLineupItemToPlaybackItem(
         currentLineupItem,
         baseUrl,
         channel.uuid,
+        await serverIdentifierFor(currentLineupItem),
       );
 
-      // Fetch next item
+      // Fetch next item. It has not aired yet, so it must not be recorded as
+      // played: play history is stamped with the request time, and a
+      // future-dated row would count against the filler cooldowns.
       const nextStartTime = now + currentLineupItem.streamDuration + 1;
       const nextResult = await calculator.getCurrentLineupItem({
         channelId: channel.uuid,
         startTime: nextStartTime,
         allowSkip: false,
+        recordPlayHistory: false,
       });
 
       let next: NativePlaybackItem | undefined;
@@ -156,6 +214,7 @@ export const nativePlaybackApi: RouterPluginAsyncCallback = async (fastify) => {
           nextLineupItem,
           baseUrl,
           channel.uuid,
+          await serverIdentifierFor(nextLineupItem),
         );
       }
 

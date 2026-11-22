@@ -5,6 +5,20 @@ const NativePlaybackTimingSchema = z.object({
   remainingMs: z.number().int(),
 });
 
+// Where the program's original file lives, so a client that can reach the
+// media server itself can play the file directly instead of Tunarr's stream.
+// Present only for programs from a remote media server (not local files).
+export const NativePlaybackSourceSchema = z.object({
+  type: z.enum(['plex', 'jellyfin', 'emby']),
+  mediaSourceId: z.string(),
+  mediaSourceName: z.string(),
+  // The server's own identifier (Plex machineIdentifier), when Tunarr has
+  // stored it.
+  serverIdentifier: z.string().optional(),
+  // The item's key on that server (Plex ratingKey, Jellyfin/Emby item id).
+  externalKey: z.string(),
+});
+
 export const NativePlaybackContentItemSchema =
   NativePlaybackTimingSchema.extend({
     type: z.literal('content'),
@@ -17,6 +31,10 @@ export const NativePlaybackContentItemSchema =
     summary: z.string().optional(),
     thumb: z.string().optional(),
     streamUrl: z.string(),
+    // The program's full length. `seekOffsetMs + remainingMs` can be shorter
+    // when the schedule cuts the program.
+    durationMs: z.number().int().optional(),
+    source: NativePlaybackSourceSchema.optional(),
   });
 
 export const NativePlaybackFlexItemSchema = NativePlaybackTimingSchema.extend({
